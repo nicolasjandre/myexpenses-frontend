@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply overflow-x-hidden
+        scroll-smooth;
+  }
+
+  body {
+    @apply text-white
+        bg-gradient-to-t from-black via-black to-neutral-900 min-h-screen min-w-full;
+  }
+
+  h1 {
+    @apply text-5xl;
+  }
+}
