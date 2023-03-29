@@ -1,30 +1,10 @@
 "use client";
 
-import { createContext, ReactNode, useState } from "react";
-import { destroyCookie, setCookie } from "nookies";
-import { api } from "../services/api";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
+import api from "../services/api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-
-type UserResponse = {
-  data: {
-    email: string;
-    name: string;
-    created_at: string;
-    avatar: string;
-    inative_at: string;
-    updated_at: string;
-  };
-
-  user: {
-    email: string;
-    name: string;
-    created_at: string;
-    avatar: string;
-    inative_at: string;
-    updated_at: string;
-  };
-};
 
 type User = {
   email: string;
@@ -48,12 +28,47 @@ type AuthContextData = {
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
   signUp(): void;
+  user: User;
 };
 
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const [user, setUser] = useState<User>(null);
   const route = useRouter();
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const cookies = parseCookies();
+    const token = cookies["myexpenses.token"];
+
+    if (token && abortController.signal) {
+      api
+        .get("/users", {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setUser({
+            name: response?.data?.name,
+            email: response?.data?.email,
+            avatar: response?.data?.avatar,
+            created_at: response?.data?.created_at,
+            inative_at: response?.data?.inative_at,
+            updated_at: response?.data?.updated_at,
+          });
+
+          return () => {
+            abortController.abort();
+          };
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [route.asPath]);
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
@@ -61,9 +76,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
         password,
       });
-      const { token } = response.data;
+      const { token, refreshToken } = response.data;
 
       setCookie(undefined, "myexpenses.token", token, {
+        maxAge: 60 * 60 * 24 * 15,
+        path: "/",
+      });
+
+      setCookie(undefined, "myexpenses.refreshToken", refreshToken, {
         maxAge: 60 * 60 * 24 * 15,
         path: "/",
       });
@@ -82,7 +102,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   function signOut() {
-    destroyCookie(undefined, 'myexpenses.token');
+    destroyCookie(undefined, "myexpenses.token");
+    destroyCookie(undefined, "myexpenses.refreshToken");
     route.push("/");
   }
 
@@ -91,9 +112,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider
-      value={{ signIn, signOut, signUp }}
-    >
+    <AuthContext.Provider value={{ signIn, signOut, signUp, user }}>
       {children}
     </AuthContext.Provider>
   );

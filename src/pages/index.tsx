@@ -10,8 +10,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import nookies, { destroyCookie } from "nookies";
-import { api } from "@/services/api";
+import nookies from "nookies";
 import { GetServerSideProps } from "next";
 
 export default function Home() {
@@ -93,31 +92,19 @@ export default function Home() {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = nookies.get(ctx);
   const token = cookies["myexpenses.token"];
-  let user;
 
   if (token) {
-    try {
-      await api.get("/users", {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      return {
-        redirect: {
-          destination: "/dashboard",
-          permanent: false,
-        },
-      };
-    } catch (err) {
-      destroyCookie(ctx, "myexpenses.token");
-      console.error(err);
-    }
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
   }
 
   return {
     props: {
-      user: user || null,
+      userProps: {},
     },
   };
 };
