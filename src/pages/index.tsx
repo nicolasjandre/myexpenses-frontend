@@ -77,7 +77,7 @@ export default function Home() {
         <p className="text-center">
           Não possui uma conta?{" "}
           <Link
-            className="transition-colors font-bold text-blue-500 hover:text-blue-400"
+            className="transition-colors font-bold text-isActive-50 hover:text-blue-400"
             href="/register"
           >
             Registre-se

@@ -13,19 +13,35 @@ module.exports = {
         "pos-100": "100% 100%",
       },
       screens: {
-        minMd: { min: "801px " },
+        // width
+        minMdw: { min: "801px " },
 
-        xl: { max: "1279px" },
+        xlw: { max: "1279px" },
 
-        lg: { max: "1023px" },
+        lgw: { max: "1023px" },
 
-        md: { max: "800px" },
+        mdw: { max: "800px" },
 
-        sm: { max: "639px" },
+        smw: { max: "639px" },
 
-        "2sm": { max: "480px" },
+        "2smw": { max: "480px" },
 
-        "3sm": { max: "360px" },
+        "3smw": { max: "360px" },
+        
+        //height
+
+        xlh: { 'raw': '(max-height: 1279px)' },
+
+        lgh: { 'raw': '(max-height: 1023px)' },
+
+        mdh: { 'raw': '(max-height: 730px)' },
+
+        smh: { 'raw': '(max-height: 639px)' },
+
+        "2smh": { 'raw': '(max-height: 480px)' },
+
+        "3smh": { 'raw': '(max-height: 360px)' },
+
       },
       fontSize: {
         sm: "0.8rem",
@@ -41,6 +57,15 @@ module.exports = {
           50: "rgba(32, 32, 32, 0.3)",
           100: "rgba(18, 18, 18, 0.55)",
         },
+        black_bg: {
+          50: "#87888C",
+          100: "#30313A",
+          500: "#171821"
+        },
+        isActive: {
+          50: "#4fdfd8",
+          100: "#98dfd8"
+        }
       },
       boxShadow: {
         glass: "0 8px 32px 0 rgba(90, 90, 90, 0.5)",

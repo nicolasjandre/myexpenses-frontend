@@ -17,7 +17,8 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
       <label className="font-bold" htmlFor={name}>{label}</label>
       <input
         className={`relative w-full h-9 p-4 bg-glass-100 focus:outline-double outline-offset-1 
-        ${error ? "outline-red-600" : "outline-glass-100"} rounded-md border-0 text-white`}
+        ${error ? "outline-red-600" : "outline-glass-100"} 
+        rounded-md border-0 text-white`}
         type={type}
         name={name}
         id={name}

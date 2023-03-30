@@ -1,5 +1,7 @@
+import { AuthContext } from "@/contexts/AuthContext";
 import axios from "axios";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
+import { useContext } from "react";
 
 let cookies = parseCookies();
 
@@ -61,6 +63,8 @@ api.interceptors.response.use(
           }
         }
       } else {
+        const { setUser } = useContext(AuthContext);
+        setUser(null);
         destroyCookie(undefined, "myexpenses.token");
         destroyCookie(undefined, "myexpenses.refreshToken");
         window.location.href = "/";
