@@ -1,8 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       backgroundSize: {
@@ -14,34 +12,34 @@ module.exports = {
       },
       screens: {
         // width
-        minMdw: { min: "801px " },
+        minMdw: { min: "650px " },
+
+        xxlw: { max: "1654px " },
 
         xlw: { max: "1279px" },
 
         lgw: { max: "1023px" },
 
-        mdw: { max: "800px" },
+        mdw: { max: "840px" },
 
-        smw: { max: "639px" },
+        smw: { max: "650px" },
 
         "2smw": { max: "480px" },
 
         "3smw": { max: "360px" },
-        
+
         //height
+        xlh: { raw: "(max-height: 1279px)" },
 
-        xlh: { 'raw': '(max-height: 1279px)' },
+        lgh: { raw: "(max-height: 1023px)" },
 
-        lgh: { 'raw': '(max-height: 1023px)' },
+        mdh: { raw: "(max-height: 730px)" },
 
-        mdh: { 'raw': '(max-height: 730px)' },
+        smh: { raw: "(max-height: 639px)" },
 
-        smh: { 'raw': '(max-height: 639px)' },
+        "2smh": { raw: "(max-height: 490px)" },
 
-        "2smh": { 'raw': '(max-height: 480px)' },
-
-        "3smh": { 'raw': '(max-height: 360px)' },
-
+        "3smh": { raw: "(max-height: 360px)" },
       },
       fontSize: {
         sm: "0.8rem",
@@ -58,29 +56,20 @@ module.exports = {
           100: "rgba(18, 18, 18, 0.55)",
         },
         black_bg: {
-          50: "#87888C",
+          50: "#30314A",
           100: "#30313A",
-          500: "#171821"
+          500: "#171821",
         },
         isActive: {
           50: "#4fdfd8",
-          100: "#98dfd8"
-        }
+          100: "#98dfd8",
+        },
       },
       boxShadow: {
         glass: "0 8px 32px 0 rgba(90, 90, 90, 0.5)",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
-      },
-      fontSize: {
-        sm: "0.8rem",
-        base: "1rem",
-        xl: "1.25rem",
-        "2xl": "1.563rem",
-        "3xl": "1.953rem",
-        "4xl": "2.441rem",
-        "5xl": "3.052rem",
       },
       boxShadow: {
         glass: "0 8px 24px 0 rgba(14, 14, 14, 0.6)",

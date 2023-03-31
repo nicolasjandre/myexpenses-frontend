@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Logo from "@/components/Header/logo";
-import { Button } from "../components/Button";
+import { Button } from "../components/Buttons/Button";
 import { Input } from "../components/Forms/Input";
 import Link from "next/link";
 import { useContext } from "react";

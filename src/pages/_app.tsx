@@ -1,14 +1,37 @@
+// remove before building
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// ----------------------------------------------------------------
 import { AuthProvider } from "@/contexts/AuthContext";
-import "../styles/input.css";
 import type { AppProps } from "next/app";
 import { SidebarProvider } from "@/contexts/SidebarContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
+import "../styles/input.css";
+import { DropdownButtonProvider } from "@/contexts/DropdownButtonContext";
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60 * 60, // 60 minutes
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
+
   return (
-    <AuthProvider>
-      <SidebarProvider>
-        <Component {...pageProps} />
-      </SidebarProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <SidebarProvider>
+          <DropdownButtonProvider>
+            <Component {...pageProps} />
+          </DropdownButtonProvider>
+        </SidebarProvider>
+      </AuthProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
