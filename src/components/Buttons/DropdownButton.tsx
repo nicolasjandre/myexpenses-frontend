@@ -2,7 +2,11 @@ import { DropdownButtonContext } from "@/contexts/DropdownButtonContext";
 import { useContext } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
-export function DropdownButton() {
+interface DropdownButtonProps {
+  tailwindCss?: string;
+}
+
+export function DropdownButton({ tailwindCss }: DropdownButtonProps) {
    const { isDropdownOpen, setIsDropdownOpen } = useContext(DropdownButtonContext)
    
    const ref = useDetectClickOutside({ onTriggered: () => setIsDropdownOpen(false) });
@@ -41,7 +45,7 @@ export function DropdownButton() {
         <div
           className={`-left-[200px] z-10 mt-2 w-56 origin-top-right rounded-md
            bg-black_bg-100 shadow-lg ring-1 ring-black ring-opacity-10 focus:outline-none
-            ${isDropdownOpen ? "absolute" : "hidden"}`}
+            ${isDropdownOpen ? "absolute" : "hidden"} ${tailwindCss}`}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"

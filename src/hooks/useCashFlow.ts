@@ -2,18 +2,45 @@ import api from "@/services/api";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useQuery } from "@tanstack/react-query";
 
-type CashFlow = {
-   totalExpenses: string;
-   totalIncomes: string;
-   balance: string;
-   expenseTitles: [];
-   incomeTitles: [];
-}
+type ExpenseTitles = {
+  id: number;
+  description: string;
+  value: number;
+  type: "EXPENSE";
+  notes?: string;
+  referenceDate: string;
+  dueDate?: string;
+  payDate?: string;
+  inative_at?: string | null;
+};
 
-export async function getCashFlow(): Promise<CashFlow> {
-  const { data } = await api.get("/dashboard" , { 
-   params: { initialDate: "2023-02-01 00:00:00", finalDate: "2023-06-30 00:00:00" },
-});
+type IncomeTitles = {
+  id: number;
+  description: string;
+  value: number;
+  type: "INCOME";
+  notes?: string;
+  referenceDate: string;
+  dueDate?: string;
+  payDate?: string;
+  inative_at?: string | null;
+};
+
+type CashFlow = {
+  totalExpenses: string;
+  totalIncomes: string;
+  balance: string;
+  expenseTitles: ExpenseTitles[];
+  incomeTitles: IncomeTitles[];
+};
+
+export async function getCashFlow(initialDate: string, finalDate: string): Promise<CashFlow> {
+  const { data } = await api.get("/dashboard", {
+    params: {
+      initialDate: initialDate,
+      finalDate: finalDate
+    },
+  });
 
   return {
     totalExpenses: formatCurrency(data?.totalExpenses),
@@ -24,6 +51,6 @@ export async function getCashFlow(): Promise<CashFlow> {
   };
 }
 
-export function useCashFlow() {
-  return useQuery(["cashFlow"], () => getCashFlow());
+export function useCashFlow(initialDate: string, finalDate: string) {
+  return useQuery(["cashFlow"], () => getCashFlow(initialDate, finalDate));
 }
