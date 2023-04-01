@@ -8,7 +8,7 @@ interface LogoProps {
 export default function Logo({ tailwindClass }: LogoProps) {
   return (
     <div className={`flex items-center gap-4 ${tailwindClass}`}>
-      <Image src={logo} alt="My Expenses Logo" className="2sm:w-14" />
+      <Image src={logo} alt="My Expenses Logo" className="2sm:w-14 bg-black rounded-2xl dark:bg-transparent" />
       <h1 className="text-4xl 2sm:text-3xl">my expenses</h1>
     </div>
   );

@@ -15,9 +15,9 @@ const TextareaBase: ForwardRefRenderFunction<HTMLTextAreaElement, TextareaProps>
     <>
       <label className="font-bold" htmlFor={name}>{label}</label>
       <textarea
-        className={`relative w-full h-32 p-4 bg-glass-100 focus:outline-double outline-offset-1 
-        ${error ? "outline-red-600" : "outline-glass-100"} resize-none 
-        rounded-lg border-0 text-white`}
+        className={`relative w-full h-32 p-4 bg-slate-200 dark:bg-glass-100 focus:outline-double outline-offset-1 
+        ${error ? "outline-red-600" : "outline-glass-100"} resize-none text-black dark:text-white border border-gray-400
+        rounded-lg`}
         name={name}
         id={name}
         ref={ref}

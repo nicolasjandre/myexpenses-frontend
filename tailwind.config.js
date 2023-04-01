@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       backgroundSize: {
@@ -20,7 +21,7 @@ module.exports = {
 
         lgw: { max: "1023px" },
 
-        mdw: { max: "840px" },
+        mdw: { max: "874px" },
 
         smw: { max: "650px" },
 

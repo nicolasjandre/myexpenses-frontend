@@ -18,8 +18,8 @@ export function ActiveLink({ children, linkHref, onClickFunc, ...rest }: ActiveL
   return (
       <Link
         {...rest}
-        className={`${isActive ? "text-isActive-50 text-[2rem]" : "text-[1.6rem]"}
-        hover:text-isActive-50 cursor-pointer transition-colors duration-300`}
+        className={`${isActive ? "dark:text-isActive-50 text-blue-700 text-[2rem]" : "text-[1.6rem]"}
+        dark:hover:text-isActive-50 hover:text-blue-500 cursor-pointer transition-colors ease-in`}
         onClick={onClickFunc}
         href={linkHref}
       >

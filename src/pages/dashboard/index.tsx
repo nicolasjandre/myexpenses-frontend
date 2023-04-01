@@ -21,6 +21,7 @@ export default function Dashboard() {
   );
   const { isSidebarClosed } = useContext(SidebarContext);
 
+
   return isLoading ? (
     <GlobalLoader />
   ) : (
@@ -30,18 +31,18 @@ export default function Dashboard() {
 
       <div
         className={`flex flex-col gap-6 pl-24 pr-24 p-6 h-screen
-      transition-all duration-500 ${
+      transition-all ease-in ${
         isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
       } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
       >
         <Header />
 
         <div className="flex items-center justify-between smw:flex-col smw:gap-2">
-          <h1 className="text-4xl smw:text-center">Dashboard</h1>
+          <h1 className="text-4xl smw:text-center text-black dark:text-white">Dashboard</h1>
           <DropdownButton tailwindCss="smw:-left-[40px]" />
         </div>
 
-        <div className="flex justify-between flex-wrap bg-black_bg-500 w-[100%] rounded-lg smw:flex-col">
+        <div className="flex justify-between flex-wrap w-[100%] rounded-lg smw:flex-col transition-colors ease-in">
           <Box
             value="R$157,23"
             title="Saldo"
@@ -64,7 +65,7 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="flex gap-[13px] bg-black_bg-500 w-[100%] xlw:flex-col items-center justify-center">
+        <div className="flex gap-[13px] w-[100%] xlw:flex-col items-center justify-center transition-colors ease-in">
           <WeeklyIncomesChart />
           <WeeklyExpensesChart />
         </div>

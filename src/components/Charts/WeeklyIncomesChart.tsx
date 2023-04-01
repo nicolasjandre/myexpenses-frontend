@@ -3,9 +3,11 @@ import actualWeek from "@/utils/last7Days";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
+import { useTheme } from "next-themes";
 
 export function WeeklyIncomesChart() {
   const { data: weeklyChartIncome } = useLast7DaysIncomes();
+  const { theme } = useTheme();
 
   const IncomesChart = dynamic(() => import("react-apexcharts"), {
     ssr: false,
@@ -14,10 +16,11 @@ export function WeeklyIncomesChart() {
   const incomeOptions: ApexOptions = {
     colors: ["#4d7c0f"],
     chart: {
+      type: "line",
       events: {
         mounted: (chart) => {
           chart.windowResizeHandler();
-        }
+        },
       },
       toolbar: {
         show: false,
@@ -25,7 +28,7 @@ export function WeeklyIncomesChart() {
       zoom: {
         enabled: false,
       },
-      foreColor: "white",
+      foreColor: `${theme === "dark" ? "white" : "black"}`,
     },
     grid: {
       show: false,
@@ -49,6 +52,7 @@ export function WeeklyIncomesChart() {
         show: true,
       },
       axisBorder: {
+        color: `${theme === "dark" ? "white" : "black"}`,
         show: true,
       },
       labels: {
@@ -57,7 +61,7 @@ export function WeeklyIncomesChart() {
       title: {
         text: "Entradas",
         style: {
-          color: "#16ff29",
+          color: "green",
         },
       },
     },
@@ -67,19 +71,21 @@ export function WeeklyIncomesChart() {
         format: "dd/MMM",
       },
       axisTicks: {
-        color: "white",
+        color: `${theme === "dark" ? "white" : "black"}`,
       },
       categories: actualWeek, // will be dynamically set
     },
   };
 
-  const weeklyIncomes = [{ name: "Entradas", data: weeklyChartIncome?.[0] }];
+  const weeklyIncomes = [{ name: "Entradas", data: weeklyChartIncome }];
 
   return (
-    <div className="w-[50%] bg-black_bg-100 rounded-lg xlw:w-[100%] px-2 pb-2 overflow-hidden">
-      <h2 className="flex justify-between px-4 pt-4">Frequência de entradas {"(Semanal)"}</h2>
+    <div className="w-[50%] bg-gray-300 dark:bg-black_bg-100 shadow-lg shadow-glass-100 rounded-lg xlw:w-[100%] 
+    transition-colors ease-in px-2 pb-2 overflow-hidden">
+      <h2 className="flex justify-between px-4 pt-4 text-black dark:text-white">
+        Frequência de entradas {"(Semanal)"}
+      </h2>
       <IncomesChart
-        heigth="100%"
         width="100%"
         type="line"
         options={incomeOptions}

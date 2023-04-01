@@ -3,21 +3,24 @@ import actualWeek from "@/utils/last7Days";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
+import { useTheme } from "next-themes";
 
 export function WeeklyExpensesChart() {
   const { data: weeklyChartExpense } = useLast7DaysExpenses();
+  const { theme } = useTheme();
 
   const ExpensesChart = dynamic(() => import("react-apexcharts"), {
     ssr: false,
   });
 
   const expenseOptions: ApexOptions = {
-    colors: ["#b91c1c"],
+    colors: ["#ff1616"],
     chart: {
+      type: "line",
       events: {
         mounted: (chart) => {
           chart.windowResizeHandler();
-        }
+        },
       },
       toolbar: {
         show: false,
@@ -25,7 +28,7 @@ export function WeeklyExpensesChart() {
       zoom: {
         enabled: false,
       },
-      foreColor: "white",
+      foreColor: `${theme === "dark" ? "white" : "black"}`,
     },
     grid: {
       show: false,
@@ -35,7 +38,6 @@ export function WeeklyExpensesChart() {
     },
     tooltip: {
       enabled: true,
-      enabledOnSeries: undefined,
       style: {
         fontSize: "12px",
         fontFamily: undefined,
@@ -44,21 +46,12 @@ export function WeeklyExpensesChart() {
         formatter: formatCurrency,
       },
     },
-    xaxis: {
-      type: "datetime",
-      labels: {
-        format: "dd/MMM",
-      },
-      axisTicks: {
-        color: "white",
-      },
-      categories: actualWeek, // will be dynamically set
-    },
     yaxis: {
       axisTicks: {
         show: true,
       },
       axisBorder: {
+        color: `${theme === "dark" ? "white" : "black"}`,
         show: true,
       },
       labels: {
@@ -71,15 +64,25 @@ export function WeeklyExpensesChart() {
         },
       },
     },
+    xaxis: {
+      type: "datetime",
+      labels: {
+        format: "dd/MMM",
+      },
+      axisTicks: {
+        color: `${theme === "dark" ? "white" : "black"}`,
+      },
+      categories: actualWeek, // will be dynamically set
+    },
   };
 
-  const weeklyExpenses = [{ name: "Gastos", data: weeklyChartExpense?.[0] }];
+  const weeklyExpenses = [{ name: "Gastos", data: weeklyChartExpense }];
 
   return (
-    <div className="w-[50%] bg-black_bg-100 rounded-lg xlw:w-[100%] px-2 pb-2">
-      <h2 className="px-4 pt-4">Frequência de gastos {"(Semanal)"}</h2>
+    <div className="w-[50%] bg-gray-300 dark:bg-black_bg-100 shadow-lg overflow-hidden
+    transition-colors ease-in shadow-glass-100 rounded-lg xlw:w-[100%] px-2 pb-2">
+      <h2 className="px-4 pt-4 text-black dark:text-white">Frequência de gastos {"(Semanal)"}</h2>
       <ExpensesChart
-        heigth="100%"
         width="100%"
         type="line"
         options={expenseOptions}

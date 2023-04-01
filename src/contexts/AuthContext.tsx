@@ -1,26 +1,11 @@
 import {
   createContext,
-  Dispatch,
   ReactNode,
-  SetStateAction,
-  useEffect,
-  useState,
 } from "react";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { useUser } from "@/hooks/useUser";
-
-type User = {
-  id: number;
-  email: string;
-  name: string;
-  created_at: string;
-  avatar: string;
-  inative_at: string;
-  updated_at: string;
-} | null;
 
 type SignInCredentials = {
   email: string;

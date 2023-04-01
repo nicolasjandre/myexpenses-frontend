@@ -32,7 +32,9 @@ api.interceptors.response.use(
     const originalConfig = error.config;
     if (error?.response) {
       if (error?.response?.status === 401) {
-        if (
+        if (error?.response?.data === "Usuário ou senha inválidos") {
+          return Promise.reject(error);
+        } else if (
           error?.response?.data?.message.includes(
             "Token inválido ou expirado"
           ) &&
@@ -59,10 +61,10 @@ api.interceptors.response.use(
           } catch (_error) {
             return Promise.reject(_error);
           }
+        } else {
+          destroyCookie(undefined, "myexpenses.token");
+          destroyCookie(undefined, "myexpenses.refreshToken");
         }
-      } else {
-        destroyCookie(undefined, "myexpenses.token");
-        destroyCookie(undefined, "myexpenses.refreshToken");
       }
     }
     return Promise.reject(error);

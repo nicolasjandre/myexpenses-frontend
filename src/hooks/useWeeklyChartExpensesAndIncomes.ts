@@ -20,10 +20,7 @@ async function getLast7DaysExpenses(type: string) {
 
   last7Days.setHours(0, 0, 0, 0);
 
-  const last7DaysStr = last7Days
-    .toISOString()
-    .slice(0, 19)
-    .replace("T", " ");
+  const last7DaysStr = last7Days.toISOString().slice(0, 19).replace("T", " ");
 
   const { data } = await api.get("/dashboard", {
     params: {
@@ -32,11 +29,12 @@ async function getLast7DaysExpenses(type: string) {
     },
   });
 
-  const titles: IncomeAndExpenseTitles[] = type === "EXPENSE" ? data?.expenseTitles : data?.incomeTitles;
+  const titles: IncomeAndExpenseTitles[] =
+    type === "EXPENSE" ? data?.expenseTitles : data?.incomeTitles;
 
-  const last7DaysExpenses: any = [
+  const last7DaysExpenses: any = 
     Array.from({ length: 7 }, (_, i) => {
-      const day = new Date();
+      const day = new Date(last7Days);
       day.setDate(last7Days.getDate() + i);
       return day.toISOString().split("T")[0];
     }).map((day) => {
@@ -47,10 +45,9 @@ async function getLast7DaysExpenses(type: string) {
       });
 
       return filteredData?.reduce((acc, curr) => acc + curr.value, 0) ?? 0;
-    }),
-  ];
+    })
 
-  return last7DaysExpenses.map((arr: any) => arr.reverse());
+  return last7DaysExpenses.reverse();
 }
 
 export function useLast7DaysExpenses() {

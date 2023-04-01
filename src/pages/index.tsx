@@ -12,9 +12,13 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import nookies from "nookies";
 import { GetServerSideProps } from "next";
+import { DarkModeButton } from "@/components/Buttons/DarkModeButton";
+import { useTheme } from "next-themes";
 
 export default function Home() {
   const { signIn } = useContext(AuthContext);
+  const { theme } = useTheme();
+
 
   interface InputValues {
     email: string;
@@ -42,14 +46,14 @@ export default function Home() {
   const onSubmit: SubmitHandler<InputValues> = (data) => signIn(data);
   return (
     <main className="flex justify-center items-center flex-col min-w-full min-h-screen p-6">
-      <ToastContainer autoClose={2500} theme="dark" />
+      <DarkModeButton tailwindCss="absolute right-20 top-16"/>
+      <ToastContainer autoClose={2000} theme={`${theme === "dark" ? "dark" : "light"}`}/>
       <Logo tailwindClass="mb-12" />
-
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mb-32 flex flex-col p-6 pt-4 pb-4 gap-2
-         justify-around text-left w-full max-w-md h-96 shadow-glass
-          backdrop-blur-md rounded-xl border-glass-100 border-2 bg-glass-50"
+        className="mb-32 flex flex-col p-6 pt-4 pb-4 gap-2 text-black dark:text-white
+         justify-around text-left w-full max-w-md h-96 shadow-glass bg-slate-100
+          backdrop-blur-md rounded-xl dark:border-glass-100 border-2 dark:bg-glass-50"
       >
         <Input
           {...register("email")}
@@ -77,7 +81,7 @@ export default function Home() {
         <p className="text-center">
           Não possui uma conta?{" "}
           <Link
-            className="transition-colors font-bold text-isActive-50 hover:text-blue-400"
+            className="transition-colors font-bold text-blue-700 hover:text-blue-500"
             href="/register"
           >
             Registre-se
