@@ -12,6 +12,7 @@ import { useCashFlow } from "@/hooks/useCashFlow";
 import { DropdownButton } from "@/components/Buttons/DropdownButton";
 import { WeeklyIncomesChart } from "@/components/Charts/WeeklyIncomesChart";
 import { WeeklyExpensesChart } from "@/components/Charts/WeeklyExpensesChart";
+import { ExpenseIncomeModal } from "@/components/Modals/ExpenseIncomeModal";
 
 export default function Dashboard() {
   const { data: cashFlow, isLoading } = useCashFlow(
@@ -24,10 +25,11 @@ export default function Dashboard() {
     <GlobalLoader />
   ) : (
     <>
+      <ExpenseIncomeModal title="Nova despesa" />
       <Sidebar />
 
       <div
-        className={`flex flex-col gap-6 pl-24 pr-24 p-6 h-screen border-l-2 border-black_bg-100
+        className={`flex flex-col gap-6 pl-24 pr-24 p-6 h-screen
       transition-all duration-500 ${
         isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
       } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}

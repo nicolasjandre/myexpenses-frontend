@@ -21,19 +21,22 @@
     "eslint-config-next": "13.2.4",
     "next": "13.2.4",
     "nookies": "^2.5.2",
-    "qs": "^6.11.1",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.0",
+    "react-currency-input-field": "^3.6.10",
     "react-detect-click-outside": "^1.1.7",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
     "react-modal": "^3.16.1",
+    "react-number-format": "^5.1.4",
     "react-toastify": "^9.1.2",
     "typescript": "5.0.2",
     "yup": "^1.0.2"
   },
   "devDependencies": {
     "@types/qs": "^6.9.7",
+    "@types/react-datepicker": "^4.10.0",
+    "@types/react-modal": "^3.13.1",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7"

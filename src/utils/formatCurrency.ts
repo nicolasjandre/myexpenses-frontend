@@ -3,3 +3,7 @@ export function formatCurrency(currency: number) {
    return formattedValue;
  }
  
+ export function parseCurrency(value: string) {
+  const numericValue = value.replace(/[^\d,-]/g, "").replace(",", ".");
+  return parseFloat(numericValue);
+}

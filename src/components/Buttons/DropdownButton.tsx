@@ -1,4 +1,5 @@
 import { DropdownButtonContext } from "@/contexts/DropdownButtonContext";
+import { ExpenseIncomesModalContext } from "@/contexts/ExpenseIncomesModalContext";
 import { useContext } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
@@ -8,6 +9,8 @@ interface DropdownButtonProps {
 
 export function DropdownButton({ tailwindCss }: DropdownButtonProps) {
    const { isDropdownOpen, setIsDropdownOpen } = useContext(DropdownButtonContext)
+   const { setIsExpenseIncomesModalOpen } = useContext(ExpenseIncomesModalContext);
+
    
    const ref = useDetectClickOutside({ onTriggered: () => setIsDropdownOpen(false) });
 
@@ -62,13 +65,14 @@ export function DropdownButton({ tailwindCss }: DropdownButtonProps) {
               Ajustar saldo
             </a>
             <a
+              onClick={() => setIsExpenseIncomesModalOpen(true)}
               href="#"
               className="text-white block px-4 py-2 text-sm hover:bg-red-700"
               role="menuitem"
               tabIndex={-1}
               id="menu-item-1"
             >
-              Adicionar despesa
+              Nova despesa
             </a>
             <a
               href="#"
@@ -77,7 +81,7 @@ export function DropdownButton({ tailwindCss }: DropdownButtonProps) {
               tabIndex={-1}
               id="menu-item-2"
             >
-              Adicionar entrada
+              Nova entrada
             </a>
           </div>
         </div>

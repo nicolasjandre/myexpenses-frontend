@@ -14,6 +14,11 @@ export function WeeklyExpensesChart() {
   const expenseOptions: ApexOptions = {
     colors: ["#b91c1c"],
     chart: {
+      events: {
+        mounted: (chart) => {
+          chart.windowResizeHandler();
+        }
+      },
       toolbar: {
         show: false,
       },

@@ -30,7 +30,7 @@ export default function Header({ tailwindClass }: HeaderProps) {
         onMouseLeave={() => setIsInsideSidebar(false)}
         onMouseEnter={() => setIsInsideSidebar(true)}
         className={`flex gap-[3rem] pt-[3.5rem] pb-[8rem] flex-col items-center fixed z-10 w-[230px] bg-black_bg-500 h-screen min-h-screen
-        mdh:pb-10 transition-all duration-500 ${isSidebarClosed && "w-[70px]"} 2smh:pt-4 2smh:gap-4 2smh:pb-4 mdw:w-[70px]
+        mdh:pb-10 transition-all duration-500 ${isSidebarClosed && "w-[70px]"} 2smh:pt-4 2smh:gap-4 2smh:pb-4 mdw:w-[70px] border-r-2 border-gray-700
       `}
       >
         <MdArrowCircleLeft
@@ -58,7 +58,7 @@ export default function Header({ tailwindClass }: HeaderProps) {
         </div>
         <div
           className={`flex flex-col items-start bg-black_bg-500 h-screen max-h-[580px]
-            lgh:gap-[1rem] lgh:justify-between  w-[100%] transition-all duration-500 overflow-hidden ${
+            lgh:gap-[1rem] justify-between  w-[100%] transition-all duration-500 overflow-hidden ${
               isSidebarClosed ? "items-center pl-0" : "pl-12"} 2smh:overflow-y-auto mdw:items-center mdw:pl-0`}
         >
           <ActiveLink linkHref="/dashboard">

@@ -14,6 +14,11 @@ export function WeeklyIncomesChart() {
   const incomeOptions: ApexOptions = {
     colors: ["#4d7c0f"],
     chart: {
+      events: {
+        mounted: (chart) => {
+          chart.windowResizeHandler();
+        }
+      },
       toolbar: {
         show: false,
       },
@@ -71,7 +76,7 @@ export function WeeklyIncomesChart() {
   const weeklyIncomes = [{ name: "Entradas", data: weeklyChartIncome?.[0] }];
 
   return (
-    <div className="w-[50%] bg-black_bg-100 rounded-lg xlw:w-[100%] px-2 pb-2">
+    <div className="w-[50%] bg-black_bg-100 rounded-lg xlw:w-[100%] px-2 pb-2 overflow-hidden">
       <h2 className="flex justify-between px-4 pt-4">Frequência de entradas {"(Semanal)"}</h2>
       <IncomesChart
         heigth="100%"
