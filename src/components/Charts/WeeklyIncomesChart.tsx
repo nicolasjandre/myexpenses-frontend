@@ -16,7 +16,7 @@ export function WeeklyIncomesChart() {
   const incomeOptions: ApexOptions = {
     colors: ["#4d7c0f"],
     chart: {
-      type: "line",
+      type: "area",
       events: {
         mounted: (chart) => {
           chart.windowResizeHandler();
@@ -77,7 +77,7 @@ export function WeeklyIncomesChart() {
     },
   };
 
-  const weeklyIncomes = [{ name: "Entradas", data: weeklyChartIncome }];
+  const weeklyIncomes = [{ name: "Entradas", data: weeklyChartIncome ? weeklyChartIncome : []}];
 
   return (
     <div className="w-[50%] bg-gray-300 dark:bg-black_bg-100 shadow-lg shadow-glass-100 rounded-lg xlw:w-[100%] 
@@ -87,7 +87,7 @@ export function WeeklyIncomesChart() {
       </h2>
       <IncomesChart
         width="100%"
-        type="line"
+        type="area"
         options={incomeOptions}
         series={weeklyIncomes}
         height={160}

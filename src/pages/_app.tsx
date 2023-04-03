@@ -10,6 +10,7 @@ import "../styles/input.css";
 import { DropdownButtonProvider } from "@/contexts/DropdownButtonContext";
 import { ExpenseIncomesModalProvider } from "@/contexts/ExpenseIncomesModalContext";
 import { ThemeProvider } from "next-themes";
+import { UserBalanceModalProvider } from "@/contexts/userBalanceModalContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -27,7 +28,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class">
-        <AuthProvider>
+        <UserBalanceModalProvider>
+          <AuthProvider>
             <ExpenseIncomesModalProvider>
               <SidebarProvider>
                 <DropdownButtonProvider>
@@ -35,8 +37,9 @@ export default function App({ Component, pageProps }: AppProps) {
                 </DropdownButtonProvider>
               </SidebarProvider>
             </ExpenseIncomesModalProvider>
-        </AuthProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
+          </AuthProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </UserBalanceModalProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

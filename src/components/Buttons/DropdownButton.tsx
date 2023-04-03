@@ -1,23 +1,40 @@
 import { DropdownButtonContext } from "@/contexts/DropdownButtonContext";
 import { ExpenseIncomesModalContext } from "@/contexts/ExpenseIncomesModalContext";
-import { useContext } from "react";
+import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
 interface DropdownButtonProps {
   tailwindCss?: string;
+  setModalType: Dispatch<SetStateAction<string>>;
 }
 
-export function DropdownButton({ tailwindCss }: DropdownButtonProps) {
+export function DropdownButton({ tailwindCss, setModalType }: DropdownButtonProps) {
   const { isDropdownOpen, setIsDropdownOpen } = useContext(
     DropdownButtonContext
   );
   const { setIsExpenseIncomesModalOpen } = useContext(
     ExpenseIncomesModalContext
   );
+  const { setIsUserBalanceModalOpen } = useContext(UserBalanceModalContext);
 
   const ref = useDetectClickOutside({
     onTriggered: () => setIsDropdownOpen(false),
   });
+
+  function handleUserBalanceAdjust() {
+    setIsUserBalanceModalOpen(true);
+  }
+
+  function handleNewExpense() {
+    setModalType("Nova despesa")
+    setIsExpenseIncomesModalOpen(true);
+  }
+
+  function handleNewIncome() {
+    setModalType("Nova entrada")
+    setIsExpenseIncomesModalOpen(true);
+  }
 
   return (
     <>
@@ -63,6 +80,7 @@ export function DropdownButton({ tailwindCss }: DropdownButtonProps) {
         >
           <div className="py-1" role="none">
             <a
+              onClick={() => handleUserBalanceAdjust()}
               href="#"
               className="dark:text-white block px-4 py-2 text-sm hover:bg-blue-500 transition-colors ease-in"
               role="menuitem"
@@ -72,7 +90,7 @@ export function DropdownButton({ tailwindCss }: DropdownButtonProps) {
               Ajustar saldo
             </a>
             <a
-              onClick={() => setIsExpenseIncomesModalOpen(true)}
+              onClick={() => handleNewExpense()}
               href="#"
               className="dark:text-white block px-4 py-2 text-sm hover:bg-red-700 transition-colors ease-in"
               role="menuitem"
@@ -82,6 +100,7 @@ export function DropdownButton({ tailwindCss }: DropdownButtonProps) {
               Nova despesa
             </a>
             <a
+              onClick={() => handleNewIncome()}
               href="#"
               className="dark:text-white block px-4 py-2 text-sm hover:bg-green-600 transition-colors ease-in"
               role="menuitem"

@@ -20,12 +20,13 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, CheckboxProps> = (
   return (
     <>
       <select
-        {...rest}
         id={selectName}
         name={selectName}
         className="bg-slate-200 dark:bg-glass-100 border border-gray-400 px-4 text-black
-         dark:text-white rounded-lg h-12 p-2 focus:outline-double outline-offset-1 focus:ring-black_bg-100
-          focus:border-black_bg-100 block text-[14px] w-full mt-2"
+         dark:text-white rounded-lg h-12 p-2 focus:outline-double focus:border-gray-400 focus:outline-gray-500
+          block text-[14px] w-full mt-2"
+          ref={ref}
+          {...rest}
       >
         {children}
       </select>

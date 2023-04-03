@@ -1,8 +1,9 @@
 import {
+  Dispatch,
   forwardRef,
   ForwardRefRenderFunction,
   InputHTMLAttributes,
-  useState,
+  SetStateAction,
 } from "react";
 import { FieldError } from "react-hook-form";
 
@@ -12,17 +13,26 @@ interface CheckboxProps extends InputHTMLAttributes<any> {
   error?: FieldError | any;
   checkedTitle: string;
   unCheckedTitle: string;
+  isToggleBoxChecked: boolean;
+  setIsToggleBoxChecked: Dispatch<SetStateAction<boolean>>;
 }
 
 const CheckboxBase: ForwardRefRenderFunction<
   HTMLInputElement,
   CheckboxProps
 > = (
-  { checkboxName, label, error = null, checkedTitle, unCheckedTitle, ...rest },
+  {
+    checkboxName,
+    label,
+    error = null,
+    isToggleBoxChecked,
+    setIsToggleBoxChecked,
+    checkedTitle,
+    unCheckedTitle,
+    ...rest
+  },
   ref
 ) => {
-  const [isToggleBoxChecked, setIsToggleBoxChecked] = useState<boolean>(false);
-
   return (
     <label className="relative inline-flex items-center cursor-pointer">
       <input

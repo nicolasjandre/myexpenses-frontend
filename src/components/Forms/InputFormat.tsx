@@ -20,7 +20,7 @@ const InputFormatted: ForwardRefRenderFunction<NumericFormatProps, InputProps> =
         </label>
       )}
       <NumericFormat
-        className={`relative w-full h-12 p-4 bg-slate-200 dark:bg-glass-100 focus:outline-double outline-offset-1 
+        className={`relative w-full h-12 p-4 bg-slate-200 dark:bg-glass-100 focus:outline-double focus:outline-gray-500
         ${error ? "outline-red-600" : "outline-glass-100"} text-lg border border-gray-400
         rounded-lg text-black dark:text-white`}
         name={name}

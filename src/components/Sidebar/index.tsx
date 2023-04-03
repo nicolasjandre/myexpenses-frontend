@@ -42,107 +42,42 @@ export default function Header({ tailwindClass }: HeaderProps) {
              isInsideSidebar ? "opacity-70" : "opacity-0"
            } hover:opacity-90 mdw:hidden ${isSidebarClosed && "rotate-180"}`}
         />
-        <div className="flex relative justify-center pb-2 transition-all ease-in">
-          <ActiveLink linkHref="/dashboard">
+        <div className="flex flex-col relative justify-center pb-2 transition-all ease-in">
             <Image
               src={logo}
               alt="My Expenses Logo"
               className={`m-auto mb-[3px] transition-all ease-in dark:bg-transparent bg-black rounded-xl ${
                 isSidebarClosed ? "w-10" : "w-16"
-              } mdw:w-10`}
-            />
-            <p
+              } mdw:w-10`} />
+
+              <span
               className={`text-center text-black dark:text-white transition-all ease-in
                 mdw:text-[11px] ${
                   isSidebarClosed ? "text-[11px]" : "text-[14px]"
-                }`}
-            >
+                }`} >
+          
               myexpenses
-            </p>
-          </ActiveLink>
+            </span>
         </div>
+
         <div
           className={`flex flex-col items-start h-screen max-h-[580px]
             lgh:gap-[1rem] justify-between  w-[100%] overflow-hidden ${
               isSidebarClosed ? "items-center pl-0" : "pl-12"
             } 2smh:overflow-y-auto mdw:items-center mdw:pl-0`}
         >
-          <ActiveLink linkHref="/dashboard">
-            <span
-              className={`flex items-center ${
-                isSidebarClosed ? "gap-0" : "gap-2"
-              }`}
-            >
-              <MdDashboard className="text-black dark:text-white"/>
-              <span className="text-[15px] dark:text-white text-black mdw:hidden">
-                {!isSidebarClosed && "Dashboard"}
-              </span>
-            </span>
-          </ActiveLink>
-          <ActiveLink linkHref="/profile">
-            <span
-              className={`flex items-center ${
-                isSidebarClosed ? "gap-0" : "gap-2"
-              }`}
-            >
-              <MdPerson className="text-black dark:text-white"/>
-              <span className="text-[15px] dark:text-white text-black mdw:hidden">
-                {!isSidebarClosed && "Perfil"}
-              </span>
-            </span>
-          </ActiveLink>
+          <ActiveLink linkHref="/dashboard" title="Dashboard" Icon={MdDashboard}/>
+          
+          <ActiveLink linkHref="/profile" Icon={MdPerson} title="Perfil" />
 
-          <ActiveLink linkHref="/creditcards">
-            <span
-              className={`flex items-center ${
-                isSidebarClosed ? "gap-0" : "gap-2"
-              }`}
-            >
-              <MdCreditCard className="text-black dark:text-white"/>
-              <span className="text-[15px] dark:text-white text-black mdw:hidden">
-                {!isSidebarClosed && "Cartões"}
-              </span>
-            </span>
-          </ActiveLink>
+          <ActiveLink linkHref="/creditcards" Icon={MdCreditCard} title="Cartões" />
 
-          <ActiveLink linkHref="/favorites">
-            <span
-              className={`flex items-center ${
-                isSidebarClosed ? "gap-0" : "gap-2"
-              }`}
-            >
-              <MdMonetizationOn className="text-black dark:text-white"/>
-              <span className="text-[15px] dark:text-white text-black mdw:hidden">
-                {!isSidebarClosed && "Transações"}
-              </span>
-            </span>
-          </ActiveLink>
+          <ActiveLink linkHref="/transactions" Icon={MdMonetizationOn} title="Transações" />
+          
+          <ActiveLink linkHref="/settings" Icon={MdSettings} title="Configurações" />
 
-          <ActiveLink linkHref="/settings">
-            <span
-              className={`flex items-center ${
-                isSidebarClosed ? "gap-0" : "gap-2"
-              }`}
-            >
-              <MdSettings className="text-black dark:text-white"/>
-              <span className="text-[15px] dark:text-white text-black mdw:hidden">
-                {!isSidebarClosed && "Configurações"}
-              </span>
-            </span>
-          </ActiveLink>
+          <ActiveLink linkHref="/" onClickFunc={signOut} Icon={MdLogout} title="Sair" />
 
-          <ActiveLink onClickFunc={signOut} linkHref="/">
-            <span
-              className={`flex items-center ${
-                isSidebarClosed ? "gap-0" : "gap-2"
-              }`}
-            >
-              <MdLogout className="text-black dark:text-white"/>
-              <span className="text-[15px] dark:text-white text-black mdw:hidden">
-                {!isSidebarClosed && "Sair"}
-              </span>
-            </span>
-          </ActiveLink>
         </div>
       </div>
     </>

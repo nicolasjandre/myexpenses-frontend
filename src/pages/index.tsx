@@ -1,7 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import Logo from "@/components/Header/logo";
 import { Button } from "../components/Buttons/Button";
 import { Input } from "../components/Forms/Input";
@@ -18,7 +17,6 @@ import { useTheme } from "next-themes";
 export default function Home() {
   const { signIn } = useContext(AuthContext);
   const { theme } = useTheme();
-
 
   interface InputValues {
     email: string;
@@ -43,11 +41,15 @@ export default function Home() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<InputValues>({ resolver: yupResolver(loginFormSchema) });
-  const onSubmit: SubmitHandler<InputValues> = (data) => signIn(data);
+  const onSubmit: SubmitHandler<InputValues> = async (data) =>
+    await signIn(data);
   return (
     <main className="flex justify-center items-center flex-col min-w-full min-h-screen p-6">
-      <DarkModeButton tailwindCss="absolute right-20 top-16"/>
-      <ToastContainer autoClose={2000} theme={`${theme === "dark" ? "dark" : "light"}`}/>
+      <DarkModeButton tailwindCss="absolute right-20 top-16" />
+      <ToastContainer
+        autoClose={2000}
+        theme={`${theme === "dark" ? "dark" : "light"}`}
+      />
       <Logo tailwindClass="mb-12" />
       <form
         onSubmit={handleSubmit(onSubmit)}

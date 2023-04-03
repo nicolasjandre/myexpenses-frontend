@@ -31,11 +31,11 @@
     "react-modal": "^3.16.1",
     "react-number-format": "^5.1.4",
     "react-toastify": "^9.1.2",
+    "tailwind-datepicker-react": "^1.2.3",
     "typescript": "5.0.2",
     "yup": "^1.0.2"
   },
   "devDependencies": {
-    "@types/qs": "^6.9.7",
     "@types/react-datepicker": "^4.10.0",
     "@types/react-modal": "^3.13.1",
     "autoprefixer": "^10.4.14",

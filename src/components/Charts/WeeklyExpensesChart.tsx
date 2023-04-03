@@ -16,7 +16,7 @@ export function WeeklyExpensesChart() {
   const expenseOptions: ApexOptions = {
     colors: ["#ff1616"],
     chart: {
-      type: "line",
+      type: "area",
       events: {
         mounted: (chart) => {
           chart.windowResizeHandler();
@@ -76,7 +76,7 @@ export function WeeklyExpensesChart() {
     },
   };
 
-  const weeklyExpenses = [{ name: "Gastos", data: weeklyChartExpense }];
+  const weeklyExpenses = [{ name: "Gastos", data: weeklyChartExpense ? weeklyChartExpense : []}];
 
   return (
     <div className="w-[50%] bg-gray-300 dark:bg-black_bg-100 shadow-lg overflow-hidden
@@ -84,7 +84,7 @@ export function WeeklyExpensesChart() {
       <h2 className="px-4 pt-4 text-black dark:text-white">Frequência de gastos {"(Semanal)"}</h2>
       <ExpensesChart
         width="100%"
-        type="line"
+        type="area"
         options={expenseOptions}
         series={weeklyExpenses}
         height={160}

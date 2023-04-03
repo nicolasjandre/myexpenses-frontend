@@ -13,6 +13,12 @@ import { DropdownButton } from "@/components/Buttons/DropdownButton";
 import { WeeklyIncomesChart } from "@/components/Charts/WeeklyIncomesChart";
 import { WeeklyExpensesChart } from "@/components/Charts/WeeklyExpensesChart";
 import { ExpenseIncomeModal } from "@/components/Modals/ExpenseIncomeModal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useTheme } from "next-themes";
+import { useUser } from "@/hooks/useUser";
+import { UserBalanceModal } from "@/components/Modals/updateUserBalanceModal";
+import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
 
 export default function Dashboard() {
   const { data: cashFlow, isLoading } = useCashFlow(
@@ -20,13 +26,22 @@ export default function Dashboard() {
     "2023-07-30 00:00:00"
   );
   const { isSidebarClosed } = useContext(SidebarContext);
-
+  const { isUserBalanceModalOpen, setIsUserBalanceModalOpen } =
+  useContext(UserBalanceModalContext);
+  const [modalType, setModalType] = useState<string>("");
+  const { theme } = useTheme();
+  const { data: user } = useUser();
 
   return isLoading ? (
     <GlobalLoader />
   ) : (
     <>
-      <ExpenseIncomeModal title="Nova despesa" />
+      <ToastContainer
+        autoClose={1500}
+        theme={`${theme === "dark" ? "dark" : "light"}`}
+      />
+      <ExpenseIncomeModal title={modalType} />
+      <UserBalanceModal />
       <Sidebar />
 
       <div
@@ -38,13 +53,19 @@ export default function Dashboard() {
         <Header />
 
         <div className="flex items-center justify-between smw:flex-col smw:gap-2">
-          <h1 className="text-4xl smw:text-center text-black dark:text-white">Dashboard</h1>
-          <DropdownButton tailwindCss="smw:-left-[40px]" />
+          <h1 className="text-4xl smw:text-center text-black dark:text-white">
+            Dashboard
+          </h1>
+          <DropdownButton
+            setModalType={setModalType}
+            tailwindCss="smw:-left-[40px]"
+          />
         </div>
 
         <div className="flex justify-between flex-wrap w-[100%] rounded-lg smw:flex-col transition-colors ease-in">
           <Box
-            value="R$157,23"
+            setModalOpen={setIsUserBalanceModalOpen}
+            value={user?.userBalance}
             title="Saldo"
             icon={<MdAccountBalanceWallet className="text-isActive-50" />}
           />
