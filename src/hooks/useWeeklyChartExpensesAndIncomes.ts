@@ -1,5 +1,7 @@
+import { Last7OrLast30DaysChartContext } from "@/contexts/Last7OrLast30DaysChartContext";
 import api from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
+import { useContext } from "react";
 
 type IncomeAndExpenseTitles = {
   id: number;
@@ -13,47 +15,58 @@ type IncomeAndExpenseTitles = {
   inative_at?: string | null;
 };
 
-async function getLast7DaysExpenses(type: string) {
+async function getLast7DaysExpenses(type: string, isSevenOrIsThirty: number) {
   const today = new Date();
-  const last7Days = new Date(today);
-  last7Days.setDate(today.getDate() - 6); // set last 7 days period
+  const last7Days = new Date(today.getTime() - isSevenOrIsThirty * 24 * 60 * 60 * 1000); // set last 7 days period
+  
+  // set hours to 00:00:00 and 23:59:59.999 with -3h gmt time
+  last7Days.setHours(-3, 0, 0, 0);
+  today.setHours(20, 59, 59, 999);
 
-  last7Days.setHours(0, 0, 0, 0);
-
-  const last7DaysStr = last7Days.toISOString().slice(0, 19).replace("T", " ");
+  const initialDate = formatDateString(last7Days);
+  const finalDate = formatDateString(today);
 
   const { data } = await api.get("/dashboard", {
     params: {
-      initialDate: last7DaysStr,
-      finalDate: today.toISOString().slice(0, 19).replace("T", " "),
+      initialDate,
+      finalDate,
     },
   });
 
   const titles: IncomeAndExpenseTitles[] =
     type === "EXPENSE" ? data?.expenseTitles : data?.incomeTitles;
 
-  const last7DaysExpenses: any = 
-    Array.from({ length: 7 }, (_, i) => {
-      const day = new Date(last7Days);
-      day.setDate(last7Days.getDate() + i);
-      return day.toISOString().split("T")[0];
-    }).map((day) => {
-      const filteredData = titles?.filter((item) => {
-        const itemDate = new Date(item.referenceDate);
-        const itemDateStr = itemDate.toISOString().split("T")[0];
-        return itemDateStr === day;
-      });
+  const last7DaysExpenses: any = Array.from({ length: isSevenOrIsThirty + 1 }, (_, i) => {
+    const day = new Date(last7Days);
+    day.setDate(last7Days.getDate() + i);
 
-      return filteredData?.reduce((acc, curr) => acc + curr.value, 0) ?? 0;
-    })
+    return day.toISOString().split("T")[0];
+  }).map((day) => {
+    const filteredData = titles?.filter((item) => {
+      const itemDate = new Date(item?.referenceDate);
+      const itemDateStr = itemDate?.toISOString().split("T")[0];
+      return itemDateStr === day && item.type === type;
+    });
+
+    return filteredData?.reduce((acc, curr) => acc + curr.value, 0) ?? 0;
+  });
 
   return last7DaysExpenses.reverse();
 }
 
-export function useLast7DaysExpenses() {
-  return useQuery(["last7DaysExpenses"], () => getLast7DaysExpenses("EXPENSE"));
+function formatDateString(date: Date): string {
+  const isoString = date.toISOString();
+  return isoString.replace("T", " ").replace("Z", "");
 }
 
-export function useLast7DaysIncomes() {
-  return useQuery(["last7DaysIncomes"], () => getLast7DaysExpenses("INCOME"));
+export function useLastDaysExpenses() {
+  const { isLast7OrLast30DaysExpensesChart } = useContext(Last7OrLast30DaysChartContext)
+
+  return useQuery(["lastDaysExpenses", isLast7OrLast30DaysExpensesChart], () => getLast7DaysExpenses("EXPENSE", isLast7OrLast30DaysExpensesChart));
+}
+
+export function useLastDaysIncomes() {
+  const { isLast7OrLast30DaysIncomesChart } = useContext(Last7OrLast30DaysChartContext)
+
+  return useQuery(["lastDaysIncomes", isLast7OrLast30DaysIncomesChart], () => getLast7DaysExpenses("INCOME", isLast7OrLast30DaysIncomesChart));
 }

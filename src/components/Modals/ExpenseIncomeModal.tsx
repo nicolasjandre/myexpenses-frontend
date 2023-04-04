@@ -48,6 +48,12 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
 
   const { data: costCenters } = useCostCenters();
 
+  function handleCloseModal() {
+    reset();
+    setIsToggleBoxChecked(false);
+    setIsExpenseIncomesModalOpen(false);
+  }
+
   const loginFormSchema = yup.object().shape({
     value: yup.string().required("Você precisa inserir um valor"),
 
@@ -58,6 +64,11 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
           ? "Dê um nome ao gasto"
           : "Dê um nome à entrada"
       ),
+
+      costCenter: yup
+      .number()
+      .required("É necessário escolher uma categoria")
+      .notOneOf([0], "É necessário escolher uma categoria")
   });
 
   const {
@@ -109,13 +120,16 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
         description: "",
         notes: "",
         costCenter: 0,
-        isPaidCheckbox: false
       });
 
       await createTitle.mutateAsync(data);
     } catch (error: any) {
       setIsExpenseIncomesModalOpen(false);
-      toast.error("Ooops... Ocorreu um erro com o servidor.");
+      if (error?.response?.data?.message) {
+        toast.error(error?.response?.data?.message);
+      } else {
+        toast.error("Ooops... Ocorreu um erro com o servidor.");
+      }
     }
   };
 
@@ -138,10 +152,10 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                     </h3>
 
                     <button
-                    type="button"
+                      type="button"
                       className="p-1 ml-auto bg-transparent border-0
                       float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                      onClick={() => setIsExpenseIncomesModalOpen(false)}
+                      onClick={() => handleCloseModal()}
                     >
                       <MdClose className="text-red-600" />
                     </button>
@@ -212,7 +226,11 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                     ) : (
                       <Datepicker
                         setDate={setSelectedDueDate}
-                        title={title.includes("despesa") ? "Data do vencimento:" : "Data do pagamento:"}
+                        title={
+                          title.includes("despesa")
+                            ? "Data do vencimento:"
+                            : "Data do pagamento:"
+                        }
                       />
                     )}
 
@@ -229,7 +247,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                     <button
                       className="text-red-500 hover:text-red-600 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 transition-all ease-in"
                       type="button"
-                      onClick={() => setIsExpenseIncomesModalOpen(false)}
+                      onClick={() => handleCloseModal()}
                     >
                       Fechar
                     </button>

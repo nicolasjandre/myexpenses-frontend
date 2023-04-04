@@ -40,7 +40,7 @@ export function Datepicker({ title, setDate, ...rest }: DatepickerProps) {
       prev: () => <MdArrowBack />,
       next: () => <MdArrowForward />,
     },
-    datepickerClassNames: "top-12",
+    datepickerClassNames: "",
     defaultDate: new Date(),
     language: "pt-BR",
   };

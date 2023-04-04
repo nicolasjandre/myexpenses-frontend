@@ -11,6 +11,8 @@ import { DropdownButtonProvider } from "@/contexts/DropdownButtonContext";
 import { ExpenseIncomesModalProvider } from "@/contexts/ExpenseIncomesModalContext";
 import { ThemeProvider } from "next-themes";
 import { UserBalanceModalProvider } from "@/contexts/userBalanceModalContext";
+import { ChoosenMonthProvider } from "@/contexts/ChoosenMonthContext";
+import { Last7OrLast30DaysChartProvider } from "@/contexts/Last7OrLast30DaysChartContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -28,18 +30,22 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class">
-        <UserBalanceModalProvider>
-          <AuthProvider>
-            <ExpenseIncomesModalProvider>
-              <SidebarProvider>
-                <DropdownButtonProvider>
-                  <Component {...pageProps} />
-                </DropdownButtonProvider>
-              </SidebarProvider>
-            </ExpenseIncomesModalProvider>
-          </AuthProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </UserBalanceModalProvider>
+        <Last7OrLast30DaysChartProvider>
+          <ChoosenMonthProvider>
+            <UserBalanceModalProvider>
+              <AuthProvider>
+                <ExpenseIncomesModalProvider>
+                  <SidebarProvider>
+                    <DropdownButtonProvider>
+                      <Component {...pageProps} />
+                    </DropdownButtonProvider>
+                  </SidebarProvider>
+                </ExpenseIncomesModalProvider>
+              </AuthProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </UserBalanceModalProvider>
+          </ChoosenMonthProvider>
+        </Last7OrLast30DaysChartProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

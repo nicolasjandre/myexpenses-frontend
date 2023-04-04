@@ -1,6 +1,8 @@
+import { ChoosenMonthContext } from "@/contexts/ChoosenMonthContext";
 import api from "@/services/api";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useQuery } from "@tanstack/react-query";
+import { useContext } from "react";
 
 type ExpenseTitles = {
   id: number;
@@ -35,12 +37,14 @@ type CashFlow = {
 };
 
 export async function getCashFlow(initialDate: string, finalDate: string): Promise<CashFlow> {
+
   const { data } = await api.get("/dashboard", {
     params: {
-      initialDate: initialDate,
-      finalDate: finalDate
+      initialDate,
+      finalDate
     },
   });
+  
 
   return {
     totalExpenses: formatCurrency(data?.totalExpenses),
@@ -51,6 +55,8 @@ export async function getCashFlow(initialDate: string, finalDate: string): Promi
   };
 }
 
-export function useCashFlow(initialDate: string, finalDate: string) {
-  return useQuery(["cashFlow"], () => getCashFlow(initialDate, finalDate));
+export function useCashFlow() {
+  const { firstDayOfMonth, lastDayOfMonth } = useContext(ChoosenMonthContext);
+
+  return useQuery(["cashFlow", firstDayOfMonth], () => getCashFlow(firstDayOfMonth, lastDayOfMonth));
 }

@@ -1,17 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import nookies from "nookies";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { SidebarContext } from "@/contexts/SidebarContext";
-import { GlobalLoader } from "@/components/Loaders/GlobalLoader";
 import { Box } from "@/components/Dashboard/Box";
 import { MdAccountBalanceWallet, MdBalance } from "react-icons/md";
 import { IoMdArrowRoundUp, IoMdArrowRoundDown } from "react-icons/io";
 import { useCashFlow } from "@/hooks/useCashFlow";
 import { DropdownButton } from "@/components/Buttons/DropdownButton";
-import { WeeklyIncomesChart } from "@/components/Charts/WeeklyIncomesChart";
-import { WeeklyExpensesChart } from "@/components/Charts/WeeklyExpensesChart";
+import { IncomesChart } from "@/components/Charts/IncomesChart";
+import { ExpensesChart } from "@/components/Charts/ExpensesChart";
 import { ExpenseIncomeModal } from "@/components/Modals/ExpenseIncomeModal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,20 +20,15 @@ import { UserBalanceModal } from "@/components/Modals/updateUserBalanceModal";
 import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
 
 export default function Dashboard() {
-  const { data: cashFlow, isLoading } = useCashFlow(
-    "2023-02-01 00:00:00",
-    "2023-07-30 00:00:00"
-  );
+  const { data: cashFlow } = useCashFlow();
+
+  const { data: user } = useUser();
   const { isSidebarClosed } = useContext(SidebarContext);
-  const { isUserBalanceModalOpen, setIsUserBalanceModalOpen } =
-  useContext(UserBalanceModalContext);
+  const { setIsUserBalanceModalOpen } = useContext(UserBalanceModalContext);
   const [modalType, setModalType] = useState<string>("");
   const { theme } = useTheme();
-  const { data: user } = useUser();
 
-  return isLoading ? (
-    <GlobalLoader />
-  ) : (
+  return (
     <>
       <ToastContainer
         autoClose={1500}
@@ -87,8 +81,8 @@ export default function Dashboard() {
         </div>
 
         <div className="flex gap-[13px] w-[100%] xlw:flex-col items-center justify-center transition-colors ease-in">
-          <WeeklyIncomesChart />
-          <WeeklyExpensesChart />
+          <IncomesChart />
+          <ExpensesChart />
         </div>
       </div>
     </>

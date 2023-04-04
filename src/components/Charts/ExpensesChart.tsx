@@ -1,13 +1,22 @@
-import { useLast7DaysExpenses } from "@/hooks/useWeeklyChartExpensesAndIncomes";
-import actualWeek from "@/utils/last7Days";
+import { useLastDaysExpenses } from "@/hooks/useWeeklyChartExpensesAndIncomes";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
+import last7Days from "@/utils/last7Days";
+import last30Days from "@/utils/last30Days";
+import { useContext, useState } from "react";
+import { ChartDropdown } from "../Buttons/ChartDropdown";
+import { Last7OrLast30DaysChartContext } from "@/contexts/Last7OrLast30DaysChartContext";
 
-export function WeeklyExpensesChart() {
-  const { data: weeklyChartExpense } = useLast7DaysExpenses();
+export function ExpensesChart() {
+  const { data: weeklyChartExpense } = useLastDaysExpenses();
   const { theme } = useTheme();
+  const [isChartDropdownOpen, setIsChartDropdownOpen] =
+    useState<boolean>(false);
+  const { isLast7OrLast30DaysExpensesChart, setIsLast7OrLast30DaysExpensesChart } = useContext(
+    Last7OrLast30DaysChartContext
+  );
 
   const ExpensesChart = dynamic(() => import("react-apexcharts"), {
     ssr: false,
@@ -55,7 +64,7 @@ export function WeeklyExpensesChart() {
         show: true,
       },
       labels: {
-        style: {},
+        style: { fontWeight: "bold" },
       },
       title: {
         text: "Gastos",
@@ -67,21 +76,34 @@ export function WeeklyExpensesChart() {
     xaxis: {
       type: "datetime",
       labels: {
-        format: "dd/MMM",
+        format: "dd/MM",
       },
       axisTicks: {
         color: `${theme === "dark" ? "white" : "black"}`,
       },
-      categories: actualWeek, // will be dynamically set
+      categories: weeklyChartExpense?.length === 7 ? last7Days : last30Days, // will be dynamically set
     },
   };
 
-  const weeklyExpenses = [{ name: "Gastos", data: weeklyChartExpense ? weeklyChartExpense : []}];
+  const weeklyExpenses = [
+    { name: "Gastos", data: weeklyChartExpense ? weeklyChartExpense : [] },
+  ];
 
   return (
-    <div className="w-[50%] bg-gray-300 dark:bg-black_bg-100 shadow-lg overflow-hidden
-    transition-colors ease-in shadow-glass-100 rounded-lg xlw:w-[100%] px-2 pb-2">
-      <h2 className="px-4 pt-4 text-black dark:text-white">Frequência de gastos {"(Semanal)"}</h2>
+    <div
+      className="w-[50%] bg-gray-300 dark:bg-black_bg-100 shadow-lg overflow-hidden
+    transition-colors ease-in shadow-glass-100 rounded-lg xlw:w-[100%] px-2 pb-2"
+    >
+      <h2 className="flex justify-between px-4 pt-4 text-black dark:text-white">
+        Frequência de gastos
+        <ChartDropdown
+          isChartDropdownOpen={isChartDropdownOpen}
+          setIsChartDropdownOpen={setIsChartDropdownOpen}
+          isLast7OrLast30DaysChart={isLast7OrLast30DaysExpensesChart}
+          setIsLast7OrLast30DaysChart={setIsLast7OrLast30DaysExpensesChart}
+        />
+      </h2>
+
       <ExpensesChart
         width="100%"
         type="area"

@@ -15,17 +15,24 @@ interface UpdateUserBalanceData {
 }
 
 export function UserBalanceModal() {
-  const { isUserBalanceModalOpen, setIsUserBalanceModalOpen } =
-    useContext(UserBalanceModalContext);
+  const { isUserBalanceModalOpen, setIsUserBalanceModalOpen } = useContext(
+    UserBalanceModalContext
+  );
   const queryClient = useQueryClient();
 
   const loginFormSchema = yup.object().shape({
     value: yup.string().required("Você precisa inserir um valor"),
   });
 
+  function handleCloseModal() {
+    setIsUserBalanceModalOpen(false);
+    reset();
+  }
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<UpdateUserBalanceData>({
     resolver: yupResolver(loginFormSchema),
@@ -63,7 +70,7 @@ export function UserBalanceModal() {
     <>
       {isUserBalanceModalOpen ? (
         <>
-          <form onSubmit={(handleSubmit(handleUpdateUserBalance))}>
+          <form onSubmit={handleSubmit(handleUpdateUserBalance)}>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
               <div className="relative w-auto my-6 mx-auto max-w-3xl">
                 <div className="border-0 rounded-lg relative flex flex-col w-full bg-gray-300 shadow-lg shadow-glass-100 outline-none focus:outline-none">
@@ -74,10 +81,10 @@ export function UserBalanceModal() {
                     </h3>
 
                     <button
-                    type="button"
+                      type="button"
                       className="p-1 ml-auto bg-transparent border-0
                       float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                      onClick={() => setIsUserBalanceModalOpen(false)}
+                      onClick={() => handleCloseModal()}
                     >
                       <MdClose className="text-red-600" />
                     </button>
@@ -99,7 +106,7 @@ export function UserBalanceModal() {
                     <button
                       className="text-red-500 hover:text-red-600 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 transition-all ease-in"
                       type="button"
-                      onClick={() => setIsUserBalanceModalOpen(false)}
+                      onClick={() => handleCloseModal()}
                     >
                       Fechar
                     </button>
@@ -112,7 +119,6 @@ export function UserBalanceModal() {
                     >
                       Salvar
                     </button>
-
                   </div>
                 </div>
               </div>

@@ -1,4 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
+import { MiniLoader } from "../Loaders/MiniLoader";
 
 interface BoxProps {
   icon?: ReactNode;
@@ -17,7 +18,7 @@ export function Box({ icon, title, value, setModalOpen, ...rest }: BoxProps) {
         <span className="text-4xl text-black dark:text-white">{icon}</span>
       </div>
       <div className="flex item-center justify-start w-full mt-4">
-         <span className="text-xl text-black dark:text-white">{value}</span>
+         <span className="text-xl text-black dark:text-white">{value ? value : <MiniLoader />}</span>
       </div>
     </div>
   );
