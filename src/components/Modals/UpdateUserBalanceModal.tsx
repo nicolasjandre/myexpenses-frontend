@@ -14,7 +14,7 @@ interface UpdateUserBalanceData {
   value: string;
 }
 
-export function UserBalanceModal() {
+export function UpdateUserBalanceModal() {
   const { isUserBalanceModalOpen, setIsUserBalanceModalOpen } = useContext(
     UserBalanceModalContext
   );
@@ -76,7 +76,7 @@ export function UserBalanceModal() {
                 <div className="border-0 rounded-lg relative flex flex-col w-full bg-gray-300 shadow-lg shadow-glass-100 outline-none focus:outline-none">
                   <div className="flex items-start justify-between p-5 rounded-t dark:bg-black_bg-100">
                     <h3 className="flex items-center gap-2 text-2xl font-semibold text-black dark:text-white">
-                      <MdAccountBalanceWallet className="text-isActive-50 text-3xl" />
+                      <MdAccountBalanceWallet className="text-blue-700 dark:text-isActive-50 text-3xl" />
                       Atualizar saldo
                     </h3>
 

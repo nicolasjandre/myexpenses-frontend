@@ -47,7 +47,7 @@ export function DropdownButton({ tailwindCss, setModalType }: DropdownButtonProp
             className="inline-flex w-[155px] justify-center gap-x-1.5 rounded-md bg-gray-300
              dark:bg-black_bg-100 px-3 py-2 text-sm font-semibold shadow-md
              shadow-glass-100
-              ring-1 ring-inset ring-gray-700 hover:bg-gray-400 dark:hover:bg-black_bg-50
+              ring-1 ring-inset ring-gray-400 dark:ring-gray-700 hover:bg-gray-400 dark:hover:bg-black_bg-50
               transition-colors ease-in"
             id="menu-button"
             aria-expanded="true"

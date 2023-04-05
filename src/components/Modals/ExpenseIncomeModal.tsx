@@ -5,28 +5,20 @@ import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { InputBRL } from "../Forms/InputFormat";
 import { Textarea } from "../Forms/Textarea";
 import { Checkbox } from "../Forms/CheckBox";
-import { Select } from "../Forms/Select";
 import { MdClose } from "react-icons/md";
 import { Datepicker } from "../Datepicker";
 import { extractNumberFromString } from "@/utils/extractNumberFromString";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
-import { useCostCenters } from "@/hooks/useCostCenters";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import api from "@/services/api";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CostcenterDropdown } from "../Buttons/CostcenterDropdownButton";
 
 interface ExpenseIncomeModalProps {
   title: string;
 }
-
-type CostCenter = {
-  id: number;
-  description: string;
-  notes: string;
-  inative_at: Date | null;
-};
 
 interface CreateTitleData {
   description: string;
@@ -43,14 +35,15 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
     new Date()
   );
   const [selectedDueDate, setSelectedDueDate] = useState<Date>(new Date());
+  const [costCenter, setCostCenter] = useState<number>(0);
+  const [isCostcenterDropdownOpen, setIsCostcenterDropdownOpen] = useState<boolean>(false);
   const [isToggleBoxChecked, setIsToggleBoxChecked] = useState<boolean>(false);
   const queryClient = useQueryClient();
-
-  const { data: costCenters } = useCostCenters();
 
   function handleCloseModal() {
     reset();
     setIsToggleBoxChecked(false);
+    setCostCenter(0);
     setIsExpenseIncomesModalOpen(false);
   }
 
@@ -64,11 +57,6 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
           ? "Dê um nome ao gasto"
           : "Dê um nome à entrada"
       ),
-
-      costCenter: yup
-      .number()
-      .required("É necessário escolher uma categoria")
-      .notOneOf([0], "É necessário escolher uma categoria")
   });
 
   const {
@@ -83,11 +71,9 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
   const createTitle = useMutation(
     async (data: CreateTitleData) => {
       const response = await api.post("/titles", {
-        costCenters: [
-          {
-            id: data?.costCenter,
-          },
-        ],
+        costCenter: {
+          id: costCenter,
+        },
         description: data?.description,
         notes: data?.notes,
         payDate: data?.isPaidCheckbox ? new Date() : null,
@@ -96,14 +82,16 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
         referenceDate: selectedReferenceDate,
         type: title.includes("despesa") ? "EXPENSE" : "INCOME",
       });
+      
+      setCostCenter(0);
 
       return response.data;
     },
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries(["cashFlow"]);
-        await queryClient.invalidateQueries(["last7DaysIncomes"]);
-        await queryClient.invalidateQueries(["last7DaysExpenses"]);
+        await queryClient.invalidateQueries(["lastDaysIncomes"]);
+        await queryClient.invalidateQueries(["lastDaysExpenses"]);
         setIsExpenseIncomesModalOpen(false);
         toast.success(
           title.includes("despesa")
@@ -118,10 +106,9 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
     try {
       reset({
         description: "",
-        notes: "",
-        costCenter: 0,
+        notes: ""
       });
-
+      
       await createTitle.mutateAsync(data);
     } catch (error: any) {
       setIsExpenseIncomesModalOpen(false);
@@ -202,20 +189,12 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                       autoComplete="off"
                     />
 
-                    <Select
-                      {...register("costCenter")}
-                      name="costCenter"
-                      selectName="costCenter"
-                      defaultValue="batata"
-                      error={errors?.costCenter}
-                    >
-                      <option value={0}>Categoria</option>
-                      {costCenters?.map((costCenter: CostCenter) => (
-                        <option value={costCenter?.id} key={costCenter?.id}>
-                          {costCenter?.description}
-                        </option>
-                      ))}
-                    </Select>
+                    <CostcenterDropdown 
+                    type={title.includes("despesa") ? "EXPENSE" : "INCOME"} 
+                    isCostcenterDropdownOpen={isCostcenterDropdownOpen} 
+                    setIsCostcenterDropdownOpen={setIsCostcenterDropdownOpen} 
+                    costCenter={costCenter} 
+                    setCostCenter={setCostCenter} />
 
                     {isToggleBoxChecked ? (
                       <div className="flex items-center h-12 border border-gray-400 bg-slate-200 dark:bg-glass-100 rounded-lg opacity-60 cursor-not-allowed">

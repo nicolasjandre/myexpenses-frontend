@@ -42,7 +42,7 @@ export function MonthYearPicker() {
         dateFormat="MMMM"
         locale="ptBR"
         calendarClassName="dark:text-white dark:bg-black_bg-100"
-        className="text-black dark:text-white bg-transparent dark:bg-transparent capitalize outline-none dark:outline-none cursor-pointer w-[100%]"
+        className="text-black dark:text-white bg-transparent caret-transparent dark:bg-transparent capitalize outline-none dark:outline-none cursor-pointer w-[100%]"
         showMonthYearPicker
       />
     </div>

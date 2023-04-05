@@ -91,7 +91,7 @@ export function ExpensesChart() {
 
   return (
     <div
-      className="w-[50%] bg-gray-300 dark:bg-black_bg-100 shadow-lg overflow-hidden
+      className="w-[50%] bg-gray-200 dark:bg-black_bg-100 shadow-lg overflow-hidden
     transition-colors ease-in shadow-glass-100 rounded-lg xlw:w-[100%] px-2 pb-2"
     >
       <h2 className="flex justify-between px-4 pt-4 text-black dark:text-white">

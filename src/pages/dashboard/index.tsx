@@ -16,7 +16,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTheme } from "next-themes";
 import { useUser } from "@/hooks/useUser";
-import { UserBalanceModal } from "@/components/Modals/updateUserBalanceModal";
+import { UpdateUserBalanceModal } from "@/components/Modals/UpdateUserBalanceModal";
 import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
 
 export default function Dashboard() {
@@ -35,7 +35,7 @@ export default function Dashboard() {
         theme={`${theme === "dark" ? "dark" : "light"}`}
       />
       <ExpenseIncomeModal title={modalType} />
-      <UserBalanceModal />
+      <UpdateUserBalanceModal />
       <Sidebar />
 
       <div
@@ -61,7 +61,7 @@ export default function Dashboard() {
             setModalOpen={setIsUserBalanceModalOpen}
             value={user?.userBalance}
             title="Saldo"
-            icon={<MdAccountBalanceWallet className="text-isActive-50" />}
+            icon={<MdAccountBalanceWallet />}
           />
           <Box
             value={cashFlow?.totalExpenses}
@@ -76,7 +76,7 @@ export default function Dashboard() {
           <Box
             value={cashFlow?.balance}
             title="Balanço"
-            icon={<MdBalance className="text-yellow-600" />}
+            icon={<MdBalance className={`${cashFlow?.balance.includes("-") ? "text-red-600 dark:text-red-600" : "text-blue-700 dark:text-blue-500"}`} />}
           />
         </div>
 
