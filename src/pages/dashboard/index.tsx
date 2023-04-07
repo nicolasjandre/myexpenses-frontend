@@ -18,6 +18,8 @@ import { useTheme } from "next-themes";
 import { useUser } from "@/hooks/useUser";
 import { UpdateUserBalanceModal } from "@/components/Modals/UpdateUserBalanceModal";
 import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
+import { CategoryExpensesPieChart } from "@/components/Charts/CategoryExpensesPieChart";
+import { CategoryIncomesPieChart } from "@/components/Charts/CategoryIncomesPieChart";
 
 export default function Dashboard() {
   const { data: cashFlow } = useCashFlow();
@@ -39,7 +41,7 @@ export default function Dashboard() {
       <Sidebar />
 
       <div
-        className={`flex flex-col gap-6 pl-24 pr-24 p-6 h-screen
+        className={`flex h-screen flex-col gap-4 p-6 pl-24 pr-24
       transition-all ease-in ${
         isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
       } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
@@ -47,7 +49,7 @@ export default function Dashboard() {
         <Header />
 
         <div className="flex items-center justify-between smw:flex-col smw:gap-2">
-          <h1 className="text-4xl smw:text-center text-black dark:text-white">
+          <h1 className="text-4xl text-black dark:text-white smw:text-center">
             Dashboard
           </h1>
           <DropdownButton
@@ -56,7 +58,7 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="flex justify-between flex-wrap w-[100%] rounded-lg smw:flex-col transition-colors ease-in">
+        <div className="flex w-[100%] flex-wrap justify-between rounded-lg transition-colors ease-in smw:flex-col">
           <Box
             setModalOpen={setIsUserBalanceModalOpen}
             value={user?.userBalance}
@@ -76,13 +78,25 @@ export default function Dashboard() {
           <Box
             value={cashFlow?.balance}
             title="Balanço"
-            icon={<MdBalance className={`${cashFlow?.balance.includes("-") ? "text-red-600 dark:text-red-600" : "text-blue-700 dark:text-blue-500"}`} />}
+            icon={
+              <MdBalance
+                className={`${
+                  cashFlow?.balance.includes("-")
+                    ? "text-red-600 dark:text-red-600"
+                    : "text-blue-700 dark:text-blue-500"
+                }`}
+              />
+            }
           />
         </div>
 
-        <div className="flex gap-[13px] w-[100%] xlw:flex-col items-center justify-center transition-colors ease-in">
+        <div className="flex w-[100%] items-center justify-center gap-[13px] transition-colors ease-in xlw:flex-col">
           <IncomesChart />
           <ExpensesChart />
+        </div>
+        <div className="mt-6 flex w-[100%] items-center justify-center gap-[13px] pb-12 transition-colors ease-in xlw:flex-col xlw:mt-0">
+          <CategoryExpensesPieChart />
+          <CategoryIncomesPieChart />
         </div>
       </div>
     </>

@@ -93,6 +93,8 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
         await queryClient.invalidateQueries(["cashFlow"]);
         await queryClient.invalidateQueries(["lastDaysIncomes"]);
         await queryClient.invalidateQueries(["lastDaysExpenses"]);
+        await queryClient.invalidateQueries(["lastDaysPieExpenses"]);
+        await queryClient.invalidateQueries(["lastDaysPieIncomes"]);
         setIsExpenseIncomesModalOpen(false);
         toast.success(
           title.includes("despesa")

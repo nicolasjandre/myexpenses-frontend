@@ -23,9 +23,9 @@ async function getLast7DaysExpenses(type: string, isSevenOrIsThirty: number) {
   last7Days.setHours(-3, 0, 0, 0);
   today.setHours(20, 59, 59, 999);
 
+
   const initialDate = formatDateString(last7Days);
   const finalDate = formatDateString(today);
-
   const { data } = await api.get("/dashboard", {
     params: {
       initialDate,
@@ -38,7 +38,12 @@ async function getLast7DaysExpenses(type: string, isSevenOrIsThirty: number) {
 
   const last7DaysExpenses: any = Array.from({ length: isSevenOrIsThirty + 1 }, (_, i) => {
     const day = new Date(last7Days);
-    day.setDate(last7Days.getDate() + i);
+    day.setDate(last7Days.getDate() + i + 1);
+    day.setHours(-3, 0, 0, 0)
+    
+    if (isSevenOrIsThirty === 6 && i === 6 || isSevenOrIsThirty === 29 && i === 29) {
+      day.setHours(23, 59, 59, 999)
+    }
 
     return day.toISOString().split("T")[0];
   }).map((day) => {

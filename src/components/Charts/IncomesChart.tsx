@@ -95,7 +95,8 @@ export function IncomesChart() {
       className="w-[50%] bg-gray-200 dark:bg-black_bg-100 shadow-lg shadow-glass-100 rounded-lg xlw:w-[100%] 
     transition-colors ease-in px-2 pb-2 overflow-hidden"
     >
-      <h2 className="flex justify-between px-4 pt-4 text-black dark:text-white">
+      <h2 className="flex justify-between px-4 pt-4 text-black dark:text-white
+      2smw:flex-col 2smw:gap-4 2smw:justify-center 2smw:items-center 2smw:pb-6">
         Frequência de entradas
         <ChartDropdown
           isChartDropdownOpen={isChartDropdownOpen}
