@@ -71,11 +71,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function signOut() {
     destroyCookie(undefined, "myexpenses.token");
     destroyCookie(undefined, "myexpenses.refreshToken");
-    queryClient.removeQueries();
     
-    route.push("/");
-  }
-
+    route.push("/"); // queries are being removed from the login page, for some reason react query
+  }                  // queryClient.removeQueries([]) is not working properly when inside the signOut function
+              
   async function signUp({
     name,
     email,

@@ -37,8 +37,6 @@ type CashFlow = {
 };
 
 export async function getCashFlow(initialDate: string, finalDate: string): Promise<CashFlow> {
-  console.log(initialDate)
-  console.log(finalDate)
 
   const { data } = await api.get("/dashboard", {
     params: {
@@ -59,7 +57,6 @@ export async function getCashFlow(initialDate: string, finalDate: string): Promi
 
 export function useCashFlow() {
   const { firstDayOfMonth, lastDayOfMonth } = useContext(ChoosenMonthContext);
-  console.log(lastDayOfMonth);
 
   return useQuery(["cashFlow", firstDayOfMonth], () => getCashFlow(firstDayOfMonth, lastDayOfMonth));
 }

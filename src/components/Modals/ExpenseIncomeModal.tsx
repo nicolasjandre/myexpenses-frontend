@@ -36,7 +36,8 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
   );
   const [selectedDueDate, setSelectedDueDate] = useState<Date>(new Date());
   const [costCenter, setCostCenter] = useState<number>(0);
-  const [isCostcenterDropdownOpen, setIsCostcenterDropdownOpen] = useState<boolean>(false);
+  const [isCostcenterDropdownOpen, setIsCostcenterDropdownOpen] =
+    useState<boolean>(false);
   const [isToggleBoxChecked, setIsToggleBoxChecked] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
@@ -82,7 +83,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
         referenceDate: selectedReferenceDate,
         type: title.includes("despesa") ? "EXPENSE" : "INCOME",
       });
-      
+
       setCostCenter(0);
 
       return response.data;
@@ -106,9 +107,9 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
     try {
       reset({
         description: "",
-        notes: ""
+        notes: "",
       });
-      
+
       await createTitle.mutateAsync(data);
     } catch (error: any) {
       setIsExpenseIncomesModalOpen(false);
@@ -125,30 +126,30 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
       {isExpenseIncomesModalOpen ? (
         <>
           <form onSubmit={handleSubmit(handleCreateTitle)}>
-            <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-              <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                <div className="border-0 rounded-lg relative flex flex-col w-full bg-gray-300 shadow-lg shadow-glass-100 outline-none focus:outline-none">
-                  <div className="flex items-start justify-between p-5 rounded-t dark:bg-black_bg-100">
+            <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
+              <div className="relative my-6 mx-auto w-auto max-w-3xl">
+                <div className="relative flex w-full flex-col rounded-lg border-0 bg-gray-300 shadow-lg shadow-glass-100 outline-none focus:outline-none">
+                  <div className="flex items-start justify-between rounded-t p-5 dark:bg-black_bg-100">
                     <h3 className="flex items-center gap-2 text-2xl font-semibold text-black dark:text-white">
                       {title.includes("despesa") ? (
-                        <IoMdArrowRoundDown className="text-red-600 text-3xl" />
+                        <IoMdArrowRoundDown className="text-3xl text-red-600" />
                       ) : (
-                        <IoMdArrowRoundUp className="text-green-600 text-3xl" />
+                        <IoMdArrowRoundUp className="text-3xl text-green-600" />
                       )}{" "}
                       {title}
                     </h3>
 
                     <button
                       type="button"
-                      className="p-1 ml-auto bg-transparent border-0
-                      float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                      className="float-right ml-auto border-0 bg-transparent
+                      p-1 text-3xl font-semibold leading-none outline-none focus:outline-none"
                       onClick={() => handleCloseModal()}
                     >
                       <MdClose className="text-red-600" />
                     </button>
                   </div>
 
-                  <div className="flex flex-col w-[92vw] max-w-[500px] p-8 py-2 flex-auto gap-4 dark:bg-black_bg-100">
+                  <div className="flex w-[92vw] max-w-[500px] flex-auto flex-col gap-4 p-8 py-2 dark:bg-black_bg-100">
                     <InputBRL
                       {...register("value")}
                       name="value"
@@ -189,16 +190,17 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                       autoComplete="off"
                     />
 
-                    <CostcenterDropdown 
-                    type={title.includes("despesa") ? "EXPENSE" : "INCOME"} 
-                    isCostcenterDropdownOpen={isCostcenterDropdownOpen} 
-                    setIsCostcenterDropdownOpen={setIsCostcenterDropdownOpen} 
-                    costCenter={costCenter} 
-                    setCostCenter={setCostCenter} />
+                    <CostcenterDropdown
+                      type={title.includes("despesa") ? "EXPENSE" : "INCOME"}
+                      isCostcenterDropdownOpen={isCostcenterDropdownOpen}
+                      setIsCostcenterDropdownOpen={setIsCostcenterDropdownOpen}
+                      costCenter={costCenter}
+                      setCostCenter={setCostCenter}
+                    />
 
                     {isToggleBoxChecked ? (
-                      <div className="flex items-center h-12 border border-gray-400 bg-slate-200 dark:bg-glass-100 rounded-lg opacity-60 cursor-not-allowed">
-                        <span className="text-center px-4">
+                      <div className="flex h-12 cursor-not-allowed items-center rounded-lg border border-gray-400 bg-slate-200 opacity-60 dark:bg-glass-100">
+                        <span className="px-4 text-center">
                           {title.includes("despesa") ? "Pago!" : "Recebido!"}
                         </span>
                       </div>
@@ -222,9 +224,9 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                   </div>
 
                   {/*footer*/}
-                  <div className="flex items-center justify-end p-6 dark:bg-black_bg-100 rounded-b">
+                  <div className="flex items-center justify-end rounded-b p-6 dark:bg-black_bg-100">
                     <button
-                      className="text-red-500 hover:text-red-600 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 transition-all ease-in"
+                      className="background-transparent mr-1 mb-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all ease-in hover:text-red-600 focus:outline-none"
                       type="button"
                       onClick={() => handleCloseModal()}
                     >
@@ -232,8 +234,8 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                     </button>
 
                     <button
-                      className="hover:bg-green-600 active:bg-emerald-700 font-bold uppercase bg-green-700 text-white
-                    text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 transition-all ease-in"
+                      className="mr-1 mb-1 rounded bg-green-700 px-6 py-3
+                    text-sm font-bold uppercase text-white shadow outline-none transition-all ease-in hover:bg-green-600 hover:shadow-lg focus:outline-none active:bg-emerald-700"
                       type="submit"
                       disabled={isSubmitting}
                     >
@@ -243,7 +245,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                 </div>
               </div>
             </div>
-            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+            <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
           </form>
         </>
       ) : null}

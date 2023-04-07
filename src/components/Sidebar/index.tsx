@@ -14,11 +14,7 @@ import logo from "../../../public/logo.png";
 import { ActiveLink } from "../ActiveLink";
 import { SidebarContext } from "@/contexts/SidebarContext";
 
-interface HeaderProps {
-  tailwindClass?: string;
-}
-
-export default function Header({ tailwindClass }: HeaderProps) {
+export default function Header() {
   const [isInsideSidebar, setIsInsideSidebar] = useState(false);
   const { isSidebarClosed, setIsSidebarClosed } = useContext(SidebarContext);
 

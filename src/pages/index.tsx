@@ -5,7 +5,7 @@ import Logo from "@/components/Header/logo";
 import { Button } from "../components/Buttons/Button";
 import { Input } from "../components/Forms/Input";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,10 +13,16 @@ import nookies from "nookies";
 import { GetServerSideProps } from "next";
 import { DarkModeButton } from "@/components/Buttons/DarkModeButton";
 import { useTheme } from "next-themes";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Home() {
   const { signIn } = useContext(AuthContext);
   const { theme } = useTheme();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.removeQueries([]);
+  }, [])
 
   interface InputValues {
     email: string;
@@ -43,8 +49,9 @@ export default function Home() {
   } = useForm<InputValues>({ resolver: yupResolver(loginFormSchema) });
   const onSubmit: SubmitHandler<InputValues> = async (data) =>
     await signIn(data);
+
   return (
-    <main className="flex justify-center items-center flex-col min-w-full min-h-screen p-6">
+    <main className="flex min-h-screen min-w-full flex-col items-center justify-center p-6">
       <DarkModeButton tailwindCss="absolute right-20 top-16" />
       <ToastContainer
         autoClose={2000}
@@ -53,9 +60,9 @@ export default function Home() {
       <Logo tailwindClass="mb-12" />
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mb-32 flex flex-col p-6 pt-4 pb-4 gap-2 text-black dark:text-white
-         justify-around text-left w-full max-w-md h-96 shadow-glass bg-slate-100
-          backdrop-blur-md rounded-xl dark:border-glass-100 border-2 dark:bg-glass-50"
+        className="mb-32 flex h-96 w-full max-w-md flex-col justify-around gap-2 rounded-xl
+         border-2 bg-slate-100 p-6 pt-4 pb-4 text-left text-black
+          shadow-glass backdrop-blur-md dark:border-glass-100 dark:bg-glass-50 dark:text-white"
       >
         <Input
           {...register("email")}
@@ -83,7 +90,7 @@ export default function Home() {
         <p className="text-center">
           Não possui uma conta?{" "}
           <Link
-            className="transition-colors font-bold text-blue-700 hover:text-blue-500"
+            className="font-bold text-blue-700 transition-colors hover:text-blue-500"
             href="/register"
           >
             Registre-se

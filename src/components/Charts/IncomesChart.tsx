@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import last7Days from "@/utils/last7Days";
 import last30Days from "@/utils/last30Days";
-import { SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { ChartDropdown } from "../Buttons/ChartDropdown";
 import { Last7OrLast30DaysChartContext } from "@/contexts/Last7OrLast30DaysChartContext";
 
