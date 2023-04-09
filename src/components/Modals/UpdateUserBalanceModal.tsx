@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { InputBRL } from "../Forms/InputFormat";
 import { MdAccountBalanceWallet, MdClose } from "react-icons/md";
@@ -28,6 +28,30 @@ export function UpdateUserBalanceModal() {
     setIsUserBalanceModalOpen(false);
     reset();
   }
+
+  const KEY_NAME_ESC = "Escape";
+  const KEY_EVENT_TYPE = "keyup";
+
+  function useEscapeKey(handleCloseModal: () => void) {
+    const handleEscKey = useCallback(
+      (event: any) => {
+        if (event.key === KEY_NAME_ESC) {
+          handleCloseModal();
+        }
+      },
+      [handleCloseModal]
+    );
+
+    useEffect(() => {
+      document.addEventListener(KEY_EVENT_TYPE, handleEscKey, false);
+
+      return () => {
+        document.removeEventListener(KEY_EVENT_TYPE, handleEscKey, false);
+      };
+    }, [handleEscKey]);
+  }
+
+  useEscapeKey(handleCloseModal);
 
   const {
     register,

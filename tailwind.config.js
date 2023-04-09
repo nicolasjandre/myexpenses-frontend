@@ -25,7 +25,7 @@ module.exports = {
 
         smw: { max: "650px" },
 
-        "2smw": { max: "480px" },
+        "2smw": { max: "500px" },
 
         "3smw": { max: "360px" },
 

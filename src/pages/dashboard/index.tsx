@@ -41,13 +41,12 @@ export default function Dashboard() {
       <Sidebar />
 
       <div
-        className={`flex h-screen flex-col gap-4 p-6 pl-24 pr-24
+        className={`flex min-h-screen flex-col gap-4 p-6 pl-24 pr-24
       transition-all ease-in ${
         isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
       } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
       >
         <Header />
-
         <div className="flex items-center justify-between smw:flex-col smw:gap-2">
           <h1 className="text-4xl text-black dark:text-white smw:text-center">
             Dashboard
@@ -57,7 +56,6 @@ export default function Dashboard() {
             tailwindCss="smw:-left-[40px]"
           />
         </div>
-
         <div className="flex w-[100%] flex-wrap justify-between rounded-lg transition-colors ease-in smw:flex-col">
           <Box
             setModalOpen={setIsUserBalanceModalOpen}
@@ -89,14 +87,13 @@ export default function Dashboard() {
             }
           />
         </div>
-
-        <div className="flex w-[100%] items-center justify-center gap-[13px] transition-colors ease-in xlw:flex-col">
+        <div className="flex w-[100%] min-h-[238px] items-center justify-center gap-[13px] transition-colors ease-in xlw:flex-col">
           <IncomesChart />
           <ExpensesChart />
         </div>
-        <div className="mt-6 flex w-[100%] items-center justify-center gap-[13px] pb-12 transition-colors ease-in xlw:flex-col xlw:mt-0">
-          <CategoryExpensesPieChart />
+        <div className="mt-6 flex w-[100%] items-center justify-center gap-[13px] transition-colors ease-in xlw:mt-0 xlw:flex-col">
           <CategoryIncomesPieChart />
+          <CategoryExpensesPieChart />
         </div>
       </div>
     </>

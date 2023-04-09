@@ -47,7 +47,7 @@ export default function Header() {
               } mdw:w-10`} />
 
               <span
-              className={`text-center text-black dark:text-white transition-all ease-in
+              className={`text-center text-black dark:text-white
                 mdw:text-[11px] ${
                   isSidebarClosed ? "text-[11px]" : "text-[14px]"
                 }`} >

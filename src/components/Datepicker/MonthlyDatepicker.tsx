@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ptBR from "date-fns/locale/pt-BR";
@@ -7,8 +7,7 @@ import { ChoosenMonthContext } from "@/contexts/ChoosenMonthContext";
 registerLocale("ptBR", ptBR);
 
 export function MonthYearPicker() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const { setFirstDayOfMonth, setLastDayOfMonth } = useContext(ChoosenMonthContext);
+  const { setFirstDayOfMonth, setLastDayOfMonth, selectedDate, setSelectedDate } = useContext(ChoosenMonthContext);
 
   useEffect(() => {
     const now = selectedDate;

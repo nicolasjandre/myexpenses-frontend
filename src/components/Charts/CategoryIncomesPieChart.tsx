@@ -6,6 +6,7 @@ import { ChartDropdown } from "../Buttons/ChartDropdown";
 import { Last7OrLast30DaysChartContext } from "@/contexts/Last7OrLast30DaysChartContext";
 import { useLastDaysPieIncomes } from "@/hooks/useWeeklyPieChartExpensesAndIncomes";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { isEmpty } from "@/utils/isObjectEmpty";
 
 type CostCenterEntry = [string, string, number];
 type ArrayOfCategoryIncomes = CostCenterEntry[];
@@ -43,6 +44,7 @@ export function CategoryIncomesPieChart() {
       width: 380,
       type: "pie",
       foreColor: theme === "dark" ? "#fff" : "#000",
+      animations: { enabled: false },
     },
     tooltip: {
       enabled: true,
@@ -73,29 +75,41 @@ export function CategoryIncomesPieChart() {
   };
 
   return (
-    <div
-      className="w-[50%] overflow-hidden rounded-lg bg-gray-200 px-2 just
+    <>
+      {isEmpty(data) ? (
+        ""
+      ) : (
+        <div
+          className="w-[50%] overflow-hidden rounded-lg bg-gray-200 px-2
     pb-2 shadow-lg shadow-glass-100 transition-colors ease-in dark:bg-black_bg-100 xlw:w-[100%]
     2smw:flex 2smw:flex-col 2smw:items-center 2smw:justify-center"
-    >
-      <h2 className="flex justify-between px-4 pt-4 text-black dark:text-white
-        2smw:flex-col 2smw:gap-4 2smw:justify-center 2smw:items-center 2smw:pb-6">
-        Ganhos por categoria
-        <ChartDropdown
-          isChartDropdownOpen={isChartDropdownOpen}
-          setIsChartDropdownOpen={setIsChartDropdownOpen}
-          isLast7OrLast30DaysChart={isLast7OrLast30DaysIncomesPieChart}
-          setIsLast7OrLast30DaysChart={setIsLast7OrLast30DaysIncomesPieChart}
-        />
-      </h2>
+        >
+          <h2
+            className="flex justify-between px-4 pt-4 text-black dark:text-white
+        2smw:flex-col 2smw:items-center 2smw:justify-center 2smw:gap-4 2smw:pb-6"
+          >
+            Ganhos por categoria
+            <ChartDropdown
+              isChartDropdownOpen={isChartDropdownOpen}
+              setIsChartDropdownOpen={setIsChartDropdownOpen}
+              isLast7OrLast30DaysChart={isLast7OrLast30DaysIncomesPieChart}
+              setIsLast7OrLast30DaysChart={
+                setIsLast7OrLast30DaysIncomesPieChart
+              }
+            />
+          </h2>
 
-      <IncomesPieChart
-        width="100%"
-        type="pie"
-        options={expenseOptions}
-        series={expenseOptions?.series}
-        height={350}
-      />
-    </div>
+          <div className="min-h-[22vw] mdw:min-h-[30vw]">
+          <IncomesPieChart
+            width="100%"
+            type="pie"
+            options={expenseOptions}
+            series={expenseOptions?.series}
+            height={400}
+          />
+          </div>
+        </div>
+      )}
+    </>
   );
 }

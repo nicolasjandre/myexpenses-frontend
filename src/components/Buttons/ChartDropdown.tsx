@@ -1,4 +1,3 @@
-import { Last7OrLast30DaysChartContext } from "@/contexts/Last7OrLast30DaysChartContext";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
@@ -19,6 +18,7 @@ export function ChartDropdown({
 }: DropdownButtonProps) {
   const ref = useDetectClickOutside({
     onTriggered: () => setIsChartDropdownOpen(false),
+    disableTouch: true,
   });
 
   return (
@@ -59,7 +59,7 @@ export function ChartDropdown({
 
         <div
           className={`-left-[95px] z-10 mt-2 w-56 origin-top-right rounded-md bg-gray-300 shadow-glass-100
-           dark:bg-black_bg-100 shadow-lg ring-1 ring-black ring-opacity-10 focus:outline-none
+           dark:bg-black_bg-100 shadow-lg ring-1 ring-black ring-opacity-10 focus:outline-none smw:-left-[45px]
             ${isChartDropdownOpen ? "absolute" : "hidden"} ${tailwindCss}`}
           role="menu"
           aria-orientation="vertical"
@@ -67,30 +67,28 @@ export function ChartDropdown({
           tabIndex={-1}
         >
           <div className="py-1" role="none">
-            <a
+            <span
               onClick={() => {
                 setIsLast7OrLast30DaysChart(6);
               }}
-              href="#"
-              className="dark:text-white block px-4 py-2 text-sm hover:bg-gray-600 transition-colors ease-in"
+              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-gray-600 transition-colors ease-in"
               role="menuitem"
               tabIndex={-1}
               id="menu-item-0"
             >
               Últimos 7 dias
-            </a>
-            <a
+            </span>
+            <span
               onClick={() => {
                 setIsLast7OrLast30DaysChart(29);
               }}
-              href="#"
-              className="dark:text-white block px-4 py-2 text-sm hover:bg-gray-600 transition-colors ease-in"
+              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-gray-600 transition-colors ease-in"
               role="menuitem"
               tabIndex={-1}
               id="menu-item-1"
             >
               Últimos 30 dias
-            </a>
+            </span>
           </div>
         </div>
       </div>

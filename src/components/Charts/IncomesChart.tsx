@@ -26,6 +26,7 @@ export function IncomesChart() {
     colors: ["#4d7c0f"],
     chart: {
       type: "area",
+      animations: {enabled: false},
       events: {
         mounted: (chart) => {
           chart.windowResizeHandler();

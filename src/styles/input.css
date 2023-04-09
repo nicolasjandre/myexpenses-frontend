@@ -10,7 +10,7 @@
 
 @layer base {
   html {
-    @apply overflow-x-hidden
+    @apply overflow-x-hidden 
         scroll-smooth;
   }
 

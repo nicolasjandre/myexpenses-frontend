@@ -26,6 +26,7 @@ export function ExpensesChart() {
     colors: ["#ff1616"],
     chart: {
       type: "area",
+      animations: {enabled: false},
       events: {
         mounted: (chart) => {
           chart.windowResizeHandler();

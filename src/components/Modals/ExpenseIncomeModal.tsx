@@ -1,5 +1,5 @@
 import { ExpenseIncomesModalContext } from "@/contexts/ExpenseIncomesModalContext";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Input } from "../Forms/Input";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { InputBRL } from "../Forms/InputFormat";
@@ -47,6 +47,30 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
     setCostCenter(0);
     setIsExpenseIncomesModalOpen(false);
   }
+
+  const KEY_NAME_ESC = "Escape";
+  const KEY_EVENT_TYPE = "keyup";
+
+  function useEscapeKey(handleCloseModal: () => void) {
+    const handleEscKey = useCallback(
+      (event: any) => {
+        if (event.key === KEY_NAME_ESC) {
+          handleCloseModal();
+        }
+      },
+      [handleCloseModal]
+    );
+
+    useEffect(() => {
+      document.addEventListener(KEY_EVENT_TYPE, handleEscKey, false);
+
+      return () => {
+        document.removeEventListener(KEY_EVENT_TYPE, handleEscKey, false);
+      };
+    }, [handleEscKey]);
+  }
+
+  useEscapeKey(handleCloseModal);
 
   const loginFormSchema = yup.object().shape({
     value: yup.string().required("Você precisa inserir um valor"),

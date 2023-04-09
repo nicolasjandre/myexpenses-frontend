@@ -7,7 +7,7 @@ type User = {
   email: string;
   name: string;
   created_at: string;
-  avatar: string;
+  image: string;
   inative_at: string;
   updated_at: string;
   userBalance : string;
@@ -20,7 +20,7 @@ export async function getUser(): Promise<User> {
     id: data?.id,
     name: data?.name,
     email: data?.email,
-    avatar: data?.avatar,
+    image: data?.image,
     created_at: data?.created_at,
     inative_at: data?.inative_at,
     updated_at: data?.updated_at,

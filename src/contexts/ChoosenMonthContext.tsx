@@ -9,6 +9,8 @@ import {
 type ChoosenMonthContextData = {
   firstDayOfMonth: string;
   lastDayOfMonth: string;
+  selectedDate: Date;
+  setSelectedDate: Dispatch<SetStateAction<Date>>;
   setFirstDayOfMonth: Dispatch<SetStateAction<string>>;
   setLastDayOfMonth: Dispatch<SetStateAction<string>>;
 };
@@ -20,6 +22,7 @@ type ChoosenMonthProviderProps = {
 export const ChoosenMonthContext = createContext({} as ChoosenMonthContextData);
 
 export function ChoosenMonthProvider({ children }: ChoosenMonthProviderProps) {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [firstDayOfMonth, setFirstDayOfMonth] = useState("");
   const [lastDayOfMonth, setLastDayOfMonth] = useState("");
 
@@ -30,6 +33,8 @@ export function ChoosenMonthProvider({ children }: ChoosenMonthProviderProps) {
         setFirstDayOfMonth,
         lastDayOfMonth,
         setLastDayOfMonth,
+        selectedDate,
+        setSelectedDate
       }}
     >
       {children}
