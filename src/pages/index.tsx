@@ -14,6 +14,7 @@ import { GetServerSideProps } from "next";
 import { DarkModeButton } from "@/components/Buttons/DarkModeButton";
 import { useTheme } from "next-themes";
 import { useQueryClient } from "@tanstack/react-query";
+import { Form } from "@/components/Forms/Form";
 
 export default function Home() {
   const { signIn } = useContext(AuthContext);
@@ -22,7 +23,7 @@ export default function Home() {
 
   useEffect(() => {
     queryClient.removeQueries([]);
-  }, [])
+  }, []);
 
   interface InputValues {
     email: string;
@@ -58,12 +59,7 @@ export default function Home() {
         theme={`${theme === "dark" ? "dark" : "light"}`}
       />
       <Logo tailwindClass="mb-12" />
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="mb-32 flex h-96 w-full max-w-md flex-col justify-around gap-2 rounded-xl
-         border-2 bg-slate-100 p-6 pt-4 pb-4 text-left text-black
-          shadow-glass backdrop-blur-md dark:border-glass-100 dark:bg-glass-50 dark:text-white"
-      >
+      <Form handleSubmit={handleSubmit} handleSubmitParam={onSubmit} tailwindCss="mb-32 h-96">
         <Input
           {...register("email")}
           label="E-mail:"
@@ -97,7 +93,7 @@ export default function Home() {
           </Link>{" "}
           agora!
         </p>
-      </form>
+      </Form>
     </main>
   );
 }

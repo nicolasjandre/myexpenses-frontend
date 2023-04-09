@@ -97,7 +97,7 @@ export function UpdateUserBalanceModal() {
           <form onSubmit={handleSubmit(handleUpdateUserBalance)}>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
               <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                <div className="border-0 rounded-lg relative flex flex-col w-full bg-gray-300 shadow-lg shadow-glass-100 outline-none focus:outline-none">
+                <div className="border-0 rounded-lg relative flex flex-col w-full bg-white shadow-glass backdrop-blur-md shadow-glass-100 outline-none focus:outline-none">
                   <div className="flex items-start justify-between p-5 rounded-t dark:bg-black_bg-100">
                     <h3 className="flex items-center gap-2 text-2xl font-semibold text-black dark:text-white">
                       <MdAccountBalanceWallet className="text-blue-700 dark:text-isActive-50 text-3xl" />

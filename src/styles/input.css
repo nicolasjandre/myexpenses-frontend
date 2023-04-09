@@ -15,7 +15,7 @@
   }
 
   body {
-    @apply dark:text-white dark:bg-black_bg-500 text-black bg-slate-100 transition-colors ease-in;
+    @apply dark:text-white bg-white dark:bg-black_bg-500 text-black transition-colors ease-in;
   }
 
   h1 {

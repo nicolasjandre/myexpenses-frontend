@@ -29,9 +29,9 @@ export function ChartDropdown({
             ref={ref}
             onClick={() => setIsChartDropdownOpen((prev) => !prev)}
             type="button"
-            className="inline-flex w-[145px] justify-center gap-x-1.5 rounded-md bg-gray-300
+            className="inline-flex w-[145px] justify-center gap-x-1.5 rounded-md bg-white backdrop-blur-md
              dark:bg-black_bg-100 px-3 py-2 text-sm font-semibold shadow-md
-             shadow-glass-100 hover:bg-gray-400 dark:hover:bg-black_bg-50
+             shadow-glass-100 hover:bg-zinc-100 dark:hover:bg-black_bg-50
               transition-colors ease-in border dark:border-gray-700"
             id="menu-button"
             aria-expanded="true"
@@ -58,7 +58,7 @@ export function ChartDropdown({
         </div>
 
         <div
-          className={`-left-[95px] z-10 mt-2 w-56 origin-top-right rounded-md bg-gray-300 shadow-glass-100
+          className={`-left-[95px] z-10 mt-2 w-56 origin-top-right rounded-md bg-white backdrop-blur-md shadow-glass-100
            dark:bg-black_bg-100 shadow-lg ring-1 ring-black ring-opacity-10 focus:outline-none smw:-left-[45px]
             ${isChartDropdownOpen ? "absolute" : "hidden"} ${tailwindCss}`}
           role="menu"
@@ -71,7 +71,7 @@ export function ChartDropdown({
               onClick={() => {
                 setIsLast7OrLast30DaysChart(6);
               }}
-              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-gray-600 transition-colors ease-in"
+              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-zinc-100 transition-colors ease-in"
               role="menuitem"
               tabIndex={-1}
               id="menu-item-0"
@@ -82,7 +82,7 @@ export function ChartDropdown({
               onClick={() => {
                 setIsLast7OrLast30DaysChart(29);
               }}
-              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-gray-600 transition-colors ease-in"
+              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-zinc-100 transition-colors ease-in"
               role="menuitem"
               tabIndex={-1}
               id="menu-item-1"

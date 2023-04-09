@@ -44,10 +44,10 @@ export function DropdownButton({ tailwindCss, setModalType }: DropdownButtonProp
             ref={ref}
             onClick={() => setIsDropdownOpen((prev) => !prev)}
             type="button"
-            className="inline-flex w-[155px] justify-center gap-x-1.5 rounded-md bg-gray-300
+            className="inline-flex w-[155px] justify-center gap-x-1.5 rounded-md bg-white backdrop-blur-md
              dark:bg-black_bg-100 px-3 py-2 text-sm font-semibold shadow-md
              shadow-glass-100
-              ring-1 ring-inset ring-gray-400 dark:ring-gray-700 hover:bg-gray-400 dark:hover:bg-black_bg-50
+              ring-1 ring-inset ring-gray-200 dark:ring-gray-700 hover:bg-zinc-100 dark:hover:bg-black_bg-50
               transition-colors ease-in"
             id="menu-button"
             aria-expanded="true"
@@ -70,7 +70,7 @@ export function DropdownButton({ tailwindCss, setModalType }: DropdownButtonProp
         </div>
 
         <div
-          className={`-left-[200px] z-10 mt-2 w-56 origin-top-right rounded-md bg-gray-300 shadow-glass-100
+          className={`-left-[200px] z-10 mt-2 w-56 origin-top-right rounded-md bg-white backdrop-blur-md shadow-glass-100
            dark:bg-black_bg-100 shadow-lg ring-1 ring-black ring-opacity-10 focus:outline-none
             ${isDropdownOpen ? "absolute" : "hidden"} ${tailwindCss}`}
           role="menu"

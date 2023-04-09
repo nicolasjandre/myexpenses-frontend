@@ -80,8 +80,8 @@ export function CategoryExpensesPieChart() {
         ""
       ) : (
         <div
-          className="w-[50%] overflow-hidden rounded-lg bg-gray-200 px-2
-    pb-2 shadow-lg shadow-glass-100 transition-colors ease-in dark:bg-black_bg-100 xlw:w-[100%]
+          className="w-[50%] overflow-hidden rounded-lg bg-white shadow-glass backdrop-blur-md px-2
+    pb-2 shadow-glass-100 transition-colors ease-in dark:bg-black_bg-100 xlw:w-[100%]
     2smw:flex 2smw:flex-col 2smw:items-center 2smw:justify-center"
         >
           <h2

@@ -17,6 +17,7 @@ import { useUser } from "@/hooks/useUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/services/api";
 import { DarkModeButton } from "@/components/Buttons/DarkModeButton";
+import { Form } from "@/components/Forms/Form";
 
 interface UpdateProfileValues {
   name: string;
@@ -81,7 +82,7 @@ export default function Dashboard() {
     fileReader.onload = async (e: ProgressEvent<FileReader>) => {
       var base64String = e?.target?.result as string;
 
-       const formData: UpdateProfileValues = {
+      const formData: UpdateProfileValues = {
         name: data?.name,
 
         email: data?.email,
@@ -133,7 +134,6 @@ export default function Dashboard() {
       };
       await updateProfile.mutateAsync(formData);
     }
-
   };
 
   return (
@@ -150,15 +150,10 @@ export default function Dashboard() {
         isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
       } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
       >
-            <DarkModeButton tailwindCss="absolute top-11 right-28"/>
+        <DarkModeButton tailwindCss="absolute top-11 right-28" />
 
         <div className="flex w-full items-center justify-center">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex h-auto w-full max-w-md flex-col justify-around gap-2 rounded-xl
-         border-2 bg-slate-100 p-6 pt-4 text-left text-black
-          shadow-glass backdrop-blur-md dark:border-glass-100 dark:bg-glass-50 dark:text-white"
-          >
+          <Form handleSubmit={handleSubmit} handleSubmitParam={onSubmit}>
             <ProfilePictureInput
               {...register("profilePicture")}
               name="profilePicture"
@@ -172,6 +167,7 @@ export default function Dashboard() {
               name="name"
               type="text"
               error={errors?.name}
+              defaultValue={user?.name}
               requiredField
             />
 
@@ -181,6 +177,7 @@ export default function Dashboard() {
               name="email"
               type="text"
               error={errors?.email}
+              defaultValue={user?.email}
               requiredField
             />
 
@@ -216,7 +213,7 @@ export default function Dashboard() {
               isDisabled={isSubmitting}
               disabled={isSubmitting}
             />
-          </form>
+          </Form>
         </div>
       </div>
     </>

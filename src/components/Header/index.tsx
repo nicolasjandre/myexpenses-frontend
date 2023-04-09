@@ -13,8 +13,8 @@ export default function Header() {
       className={`border-bottom flex h-[80px] w-[100%] items-center justify-between transition-all ease-in`}
     >
       <div
-        className="flex h-[3.2rem] w-[66%] max-w-[130px] items-center rounded-lg bg-slate-200 pl-4 pr-4
-        shadow-md shadow-glass-100 transition-all ease-in dark:bg-black_bg-100	mdw:hidden"
+        className="flex h-[3.2rem] w-[66%] max-w-[130px] items-center rounded-lg bg-white shadow-glass pl-4 pr-4
+        shadow-glass-100 transition-all ease-in dark:bg-black_bg-100	mdw:hidden"
       >
         <MonthYearPicker />
       </div>

@@ -67,8 +67,8 @@ export default function Home() {
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="mb-32 flex flex-col p-6 pt-4 pb-4 gap-2 text-black dark:text-white
-         justify-around text-left w-full max-w-md shadow-glass bg-slate-100 h-auto
-          backdrop-blur-md rounded-xl dark:border-glass-100 border-2 dark:bg-glass-50"
+         justify-around text-left w-full max-w-md shadow-glass bg-white h-auto
+          backdrop-blur-md rounded-xl dark:border-glass-100 border-2 dark:bg-black_bg-100"
       >
         <Input
           {...register("name")}

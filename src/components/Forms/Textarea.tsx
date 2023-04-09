@@ -22,7 +22,7 @@ const TextareaBase: ForwardRefRenderFunction<
       </label>
       <textarea
         className={`relative w-full h-32 p-4 placeholder:text-black
-         dark:placeholder:text-white placeholder:opacity-60 bg-slate-200 dark:bg-glass-100 focus:outline-double 
+         dark:placeholder:text-white placeholder:opacity-60 bg-zinc-100 dark:bg-glass-100 focus:outline-double 
         ${
           error ? "outline-red-600" : "outline-glass-100"
         } resize-none text-black dark:text-white border border-gray-400 focus:outline-gray-500

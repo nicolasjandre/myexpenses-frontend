@@ -12,8 +12,8 @@ export function Box({ icon, title, value, setModalOpen, ...rest }: BoxProps) {
   return (
     <div
       onClick={() => setModalOpen && setModalOpen(true)}
-      className="bg-gray-200 shadow-lg shadow-glass-100 dark:bg-black_bg-100 p-6 w-[24.5%] h-[130px] 
-    rounded-lg xxlw:w-[49.5%] smw:w-[100%] cursor-pointer mb-6 hover:bg-gray-300 dark:hover:bg-black_bg-50
+      className="bg-white shadow-glass backdrop-blur-md  dark:bg-black_bg-100 p-6 w-[24.5%] h-[130px] 
+    rounded-lg xxlw:w-[49.5%] smw:w-[100%] cursor-pointer mb-6 hover:bg-zinc-100 dark:hover:bg-black_bg-50
          transition-colors ease-in"
       {...rest}
     >

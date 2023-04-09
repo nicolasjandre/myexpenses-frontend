@@ -44,7 +44,7 @@ export function CostcenterDropdown({
             onClick={() => setIsCostcenterDropdownOpen((prev) => !prev)}
             type="button"
             className="mt-2 inline-flex h-12 w-[100%] items-center justify-between gap-x-1.5
-            rounded-lg border border-gray-400 bg-slate-200 p-4 text-sm text-lg font-semibold
+            rounded-lg border border-gray-400 bg-zinc-100 p-4 text-sm text-lg font-semibold
             text-black shadow-md transition-colors ease-in focus:outline-double focus:outline-gray-400
              dark:bg-glass-100 dark:text-white"
             id="menu-button"
@@ -69,7 +69,7 @@ export function CostcenterDropdown({
         </div>
 
         <div
-          className={`-left-[0px] z-10 mt-2 max-h-[30vh] w-[100%] origin-top-right overflow-auto rounded-md bg-gray-300
+          className={`-left-[0px] z-10 mt-2 max-h-[30vh] w-[100%] origin-top-right overflow-auto rounded-md bg-zinc-100
            shadow-lg shadow-glass-100 ring-1 ring-black ring-opacity-10 focus:outline-none dark:bg-black_bg-100
             ${isCostcenterDropdownOpen ? "absolute" : "hidden"}`}
           role="menu"

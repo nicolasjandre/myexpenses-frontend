@@ -154,7 +154,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
           <form onSubmit={handleSubmit(handleCreateTitle)}>
             <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
               <div className="relative my-6 mx-auto w-auto max-w-3xl">
-                <div className="relative flex w-full flex-col rounded-lg border-0 bg-gray-300 shadow-lg shadow-glass-100 outline-none focus:outline-none">
+                <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-glass backdrop-blur-md shadow-glass-100 outline-none focus:outline-none">
                   <div className="flex items-start justify-between rounded-t p-5 dark:bg-black_bg-100">
                     <h3 className="flex items-center gap-2 text-2xl font-semibold text-black dark:text-white">
                       {title.includes("despesa") ? (
