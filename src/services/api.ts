@@ -64,6 +64,21 @@ api.interceptors.response.use(
         } else {
           destroyCookie(undefined, "myexpenses.token");
           destroyCookie(undefined, "myexpenses.refreshToken");
+          if (typeof window !== "undefined") {
+            window.location.href = "/";
+          }
+        }
+      } else if (error?.response?.status === 403) {
+        if (
+          error?.response?.data?.message.includes(
+            "Este refresh token não existe na base de dados"
+          )
+        ) {
+          destroyCookie(undefined, "myexpenses.token");
+          destroyCookie(undefined, "myexpenses.refreshToken");
+          if (typeof window !== "undefined") {
+            window.location.href = "/";
+          }
         }
       }
     }

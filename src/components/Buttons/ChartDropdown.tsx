@@ -5,6 +5,7 @@ interface DropdownButtonProps {
   tailwindCss?: string;
   isChartDropdownOpen: boolean;
   isLast7OrLast30DaysChart: number;
+  onLast30DaysMouseEnter: (days: number) => void;
   setIsLast7OrLast30DaysChart: Dispatch<SetStateAction<number>>;
   setIsChartDropdownOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -14,6 +15,7 @@ export function ChartDropdown({
   isChartDropdownOpen,
   setIsChartDropdownOpen,
   isLast7OrLast30DaysChart,
+  onLast30DaysMouseEnter,
   setIsLast7OrLast30DaysChart,
 }: DropdownButtonProps) {
   const ref = useDetectClickOutside({
@@ -27,7 +29,10 @@ export function ChartDropdown({
         <div>
           <button
             ref={ref}
-            onClick={() => setIsChartDropdownOpen((prev) => !prev)}
+            onClick={() => {
+              setIsChartDropdownOpen((prev) => !prev)
+              onLast30DaysMouseEnter(29)
+            }}
             type="button"
             className="inline-flex w-[145px] justify-center gap-x-1.5 rounded-md bg-white backdrop-blur-md
              dark:bg-black_bg-100 px-3 py-2 text-sm font-semibold shadow-md
@@ -71,7 +76,7 @@ export function ChartDropdown({
               onClick={() => {
                 setIsLast7OrLast30DaysChart(6);
               }}
-              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-zinc-100 transition-colors ease-in"
+              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-black_bg-50 transition-colors ease-in"
               role="menuitem"
               tabIndex={-1}
               id="menu-item-0"
@@ -82,7 +87,7 @@ export function ChartDropdown({
               onClick={() => {
                 setIsLast7OrLast30DaysChart(29);
               }}
-              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-zinc-100 transition-colors ease-in"
+              className="cursor-pointer dark:text-white block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-black_bg-50 transition-colors ease-in"
               role="menuitem"
               tabIndex={-1}
               id="menu-item-1"

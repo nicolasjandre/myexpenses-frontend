@@ -31,7 +31,8 @@ type FilteredDataByCostCenter = {
   };
 };
 
-async function getLast7Or30DaysPieChart(
+
+export async function getLast7Or30DaysPieChart(
   type: string,
   isSevenOrIsThirty: number
 ) {
@@ -76,6 +77,7 @@ async function getLast7Or30DaysPieChart(
   ).map((day) => {
     const filteredData = titles?.filter((item) => {
       const itemDate = new Date(item?.referenceDate);
+      itemDate.setHours(-3, 0, 0, 0);
       const itemDateStr = itemDate?.toISOString().split("T")[0];
       return itemDateStr === day && item.type === type;
     });
@@ -100,7 +102,17 @@ async function getLast7Or30DaysPieChart(
     });
   });
 
-  return filteredDataByCostCenter;
+  const keyValueMappedData = Object.entries(filteredDataByCostCenter).map(([key, value]) => {
+    return [key, value.description, value.sumOfValues];
+  })
+
+  const chartProps: any = {
+    label: keyValueMappedData?.map((item) => item[1]),
+    series: keyValueMappedData?.map((item) => item[2])
+  }
+  
+
+  return chartProps;
 }
 
 function formatDateString(date: Date): string {

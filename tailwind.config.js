@@ -21,6 +21,8 @@ module.exports = {
 
         lgw: { max: "1023px" },
 
+        minLgw: { min: "1023px " },
+
         mdw: { max: "874px" },
 
         smw: { max: "650px" },

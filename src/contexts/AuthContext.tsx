@@ -3,7 +3,7 @@ import { destroyCookie, setCookie } from "nookies";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 type SignInCredentials = {
   email: string;
@@ -31,11 +31,9 @@ export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const route = useRouter();
-  const queryClient = useQueryClient();
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
-      const queryClient = new QueryClient();
       const response = await api.post("/auth", {
         email,
         password,
@@ -54,9 +52,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       api.defaults.headers.common["Authorization"] = token;
 
-      await queryClient.invalidateQueries();
-      await queryClient.refetchQueries();
-
       route.push("/dashboard");
     } catch (e: any) {
       if (e?.response?.data) {
@@ -71,10 +66,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function signOut() {
     destroyCookie(undefined, "myexpenses.token");
     destroyCookie(undefined, "myexpenses.refreshToken");
-    
-    route.push("/"); // queries are being removed from the login page, for some reason react query
-  }                  // queryClient.removeQueries([]) is not working properly when inside the signOut function
-              
+
+    route.push("/");
+  }
+
   async function signUp({
     name,
     email,

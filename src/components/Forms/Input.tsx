@@ -8,10 +8,11 @@ interface InputProps extends InputHTMLAttributes<any> {
   error?: FieldError | any;
   tailwindCss?: string;
   requiredField?: boolean;
+  onChangeFunc?: (value: string) => void;
 }
 
 const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { name, label, type, error = null, requiredField, tailwindCss, ...rest },
+  { name, label, type, error = null, onChangeFunc, requiredField, tailwindCss, ...rest },
   ref
 ) => {
   return (
@@ -22,6 +23,11 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         ${error ? "outline-red-600" : "dark:outline-glass-100 outline-gray-400"} ${tailwindCss} border-gray-400 border
         rounded-lg dark:text-white text-black`}
         type={type}
+        onInput={(e: any) => {
+          if (onChangeFunc) {
+            onChangeFunc(e?.target?.value)
+          }
+        }}
         name={name}
         id={name}
         ref={ref}

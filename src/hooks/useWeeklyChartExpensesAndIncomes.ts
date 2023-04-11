@@ -15,7 +15,7 @@ type IncomeAndExpenseTitles = {
   inative_at?: string | null;
 };
 
-async function getLast7DaysExpenses(type: string, isSevenOrIsThirty: number) {
+export async function getLast7DaysExpenses(type: string, isSevenOrIsThirty: number) {
   const today = new Date();
   const last7Days = new Date(today.getTime() - isSevenOrIsThirty * 24 * 60 * 60 * 1000); // set last 7 days period
   
@@ -49,6 +49,7 @@ async function getLast7DaysExpenses(type: string, isSevenOrIsThirty: number) {
   }).map((day) => {
     const filteredData = titles?.filter((item) => {
       const itemDate = new Date(item?.referenceDate);
+      itemDate.setHours(-3, 0, 0, 0);
       const itemDateStr = itemDate?.toISOString().split("T")[0];
       return itemDateStr === day && item.type === type;
     });

@@ -154,7 +154,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
           <form onSubmit={handleSubmit(handleCreateTitle)}>
             <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
               <div className="relative my-6 mx-auto w-auto max-w-3xl">
-                <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-glass backdrop-blur-md shadow-glass-100 outline-none focus:outline-none">
+                <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-glass shadow-glass-100 outline-none backdrop-blur-md focus:outline-none">
                   <div className="flex items-start justify-between rounded-t p-5 dark:bg-black_bg-100">
                     <h3 className="flex items-center gap-2 text-2xl font-semibold text-black dark:text-white">
                       {title.includes("despesa") ? (
@@ -188,8 +188,8 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                     <Datepicker
                       title={
                         title.includes("despesa")
-                          ? "Data do gasto"
-                          : "Data da entrada"
+                          ? "Data do gasto:"
+                          : "Data da entrada:"
                       }
                       setDate={setSelectedReferenceDate}
                     />
@@ -225,10 +225,14 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                     />
 
                     {isToggleBoxChecked ? (
-                      <div className="flex h-12 cursor-not-allowed items-center rounded-lg border border-gray-400 bg-slate-200 opacity-60 dark:bg-glass-100">
-                        <span className="px-4 text-center">
-                          {title.includes("despesa") ? "Pago!" : "Recebido!"}
-                        </span>
+                      <div className="flex flex-col gap-2">
+                        <label>{title.includes("despesa") ? "Data do vencimento:" : "Data do pagamento:"}</label>
+                        <div className="flex h-12 cursor-not-allowed items-center rounded-lg
+                         border border-gray-400 bg-zinc-100 opacity-60 dark:bg-glass-100">
+                          <span className="px-4 text-center">
+                            {title.includes("despesa") ? "Pago!" : "Recebido!"}
+                          </span>
+                        </div>
                       </div>
                     ) : (
                       <Datepicker

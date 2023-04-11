@@ -4,15 +4,21 @@ import { useTheme } from "next-themes";
 import { useContext, useState } from "react";
 import { ChartDropdown } from "../Buttons/ChartDropdown";
 import { Last7OrLast30DaysChartContext } from "@/contexts/Last7OrLast30DaysChartContext";
-import { useLastDaysPieExpenses } from "@/hooks/useWeeklyPieChartExpensesAndIncomes";
+import {
+  getLast7Or30DaysPieChart,
+  useLastDaysPieExpenses,
+} from "@/hooks/useWeeklyPieChartExpensesAndIncomes";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { isEmpty } from "@/utils/isObjectEmpty";
+import { useQueryClient } from "@tanstack/react-query";
+import { MiniLoader } from "../Loaders/MiniLoader";
 
-type CostCenterEntry = [string, string, number];
-type ArrayOfCategoryExpenses = CostCenterEntry[];
+const ExpensesPieChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 export function CategoryExpensesPieChart() {
-  const { data } = useLastDaysPieExpenses();
+  const { data, isInitialLoading } = useLastDaysPieExpenses();
+  const queryClient = useQueryClient();
   const { theme } = useTheme();
   const [isChartDropdownOpen, setIsChartDropdownOpen] =
     useState<boolean>(false);
@@ -21,20 +27,14 @@ export function CategoryExpensesPieChart() {
     setIsLast7OrLast30DaysExpensesPieChart,
   } = useContext(Last7OrLast30DaysChartContext);
 
-  let arrayOfCategoryExpenses: ArrayOfCategoryExpenses = [];
-
-  if (data !== undefined) {
-    arrayOfCategoryExpenses = Object.entries(data).map(([key, value]) => {
-      return [key, value.description, value.sumOfValues];
-    });
+  function prefetchLastDaysPieExpensesAndIncomes(days: number) {
+    queryClient.prefetchQuery(["lastDaysPieExpenses", days], () =>
+      getLast7Or30DaysPieChart("EXPENSE", days)
+    );
   }
 
-  const ExpensesChart = dynamic(() => import("react-apexcharts"), {
-    ssr: false,
-  });
-
   const expenseOptions: ApexOptions = {
-    series: arrayOfCategoryExpenses?.map((item) => item[2]) || [],
+    series: data?.series || [],
     dataLabels: {
       style: {
         fontSize: "14px",
@@ -52,12 +52,9 @@ export function CategoryExpensesPieChart() {
       },
     },
     chart: {
-      width: 380,
-      type: "pie",
       foreColor: theme === "dark" ? "#fff" : "#000",
-      animations: { enabled: false },
     },
-    labels: arrayOfCategoryExpenses?.map((item) => item[1]) || [],
+    labels: data?.label || [],
     colors: ["#880808", "#CC5500", "#702963", "#954535", "#FF3131", "#722F37"],
     responsive: [
       {
@@ -76,40 +73,41 @@ export function CategoryExpensesPieChart() {
 
   return (
     <>
-      {isEmpty(data) ? (
-        ""
-      ) : (
-        <div
-          className="w-[50%] overflow-hidden rounded-lg bg-white shadow-glass backdrop-blur-md px-2
-    pb-2 shadow-glass-100 transition-colors ease-in dark:bg-black_bg-100 xlw:w-[100%]
+      <div
+        className="w-[50%] overflow-hidden rounded-lg bg-white px-2 pb-2 shadow-glass
+    shadow-glass-100 backdrop-blur-md transition-colors ease-in dark:bg-black_bg-100 xlw:w-[100%]
     2smw:flex 2smw:flex-col 2smw:items-center 2smw:justify-center"
-        >
-          <h2
-            className="flex justify-between px-4 pt-4 text-black dark:text-white
+      >
+        <h2
+          className="flex justify-between px-4 pt-4 text-black dark:text-white
       2smw:flex-col 2smw:items-center 2smw:justify-center 2smw:gap-4 2smw:pb-6"
-          >
-            Gastos por categoria
-            <ChartDropdown
-              isChartDropdownOpen={isChartDropdownOpen}
-              setIsChartDropdownOpen={setIsChartDropdownOpen}
-              isLast7OrLast30DaysChart={isLast7OrLast30DaysExpensesPieChart}
-              setIsLast7OrLast30DaysChart={
-                setIsLast7OrLast30DaysExpensesPieChart
-              }
-            />
-          </h2>
+        >
+          Gastos por categoria
+          <ChartDropdown
+            onLast30DaysMouseEnter={prefetchLastDaysPieExpensesAndIncomes}
+            isChartDropdownOpen={isChartDropdownOpen}
+            setIsChartDropdownOpen={setIsChartDropdownOpen}
+            isLast7OrLast30DaysChart={isLast7OrLast30DaysExpensesPieChart}
+            setIsLast7OrLast30DaysChart={setIsLast7OrLast30DaysExpensesPieChart}
+          />
+        </h2>
 
-          <div className="min-h-[22vw] mdw:min-h-[30vw]">
-            <ExpensesChart
+        <div className="min-h-[22vw] mdw:min-h-[30vw]">
+          {isInitialLoading ? (
+            <div className="flex h-[160px] w-full items-center justify-center">
+              <MiniLoader />
+            </div>
+          ) : (
+            <ExpensesPieChart
               width="100%"
               type="pie"
               options={expenseOptions}
               series={expenseOptions?.series}
               height={400}
             />
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 }

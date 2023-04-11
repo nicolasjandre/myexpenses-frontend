@@ -87,7 +87,7 @@ export default function Dashboard() {
             }
           />
         </div>
-        <div className="flex w-[100%] min-h-[238px] items-center justify-center gap-[13px] transition-colors ease-in xlw:flex-col">
+        <div className="flex w-[100%] items-center justify-center gap-[13px] transition-colors ease-in xlw:flex-col">
           <IncomesChart />
           <ExpensesChart />
         </div>

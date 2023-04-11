@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import nookies from "nookies";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Sidebar from "@/components/Sidebar";
@@ -34,6 +34,7 @@ export default function Dashboard() {
   const { isSidebarClosed } = useContext(SidebarContext);
   const { theme } = useTheme();
   const { data: user } = useUser();
+  const [newPassword, setNewPassword] = useState("");
 
   const emailRegex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -47,20 +48,36 @@ export default function Dashboard() {
       .email("Digite um e-mail válido.")
       .matches(emailRegex, "Digite um e-mail válido"),
 
-    password: yup.string().required("Senha é obrigatório"),
+    password: yup.string().required("Senha é obrigatório")
+    .min(8, "A senha precisa ter ao menos 8 caracteres."),
 
-    newPassword: yup.string(),
+    newPassword: newPassword.length > 0 
+    ?
+    yup.string()
+    .min(8, "A nova senha precisa ter ao menos 8 caracteres.")
+    : 
+    yup.string()
+    ,
 
     passwordConfirmation: yup
       .string()
-      .oneOf([yup.ref("newPassword")], "As senhas não conferem"),
+      .oneOf([yup.ref("newPassword")], "A nova senha e a confirmação precisam ser iguais."),
   });
 
   const {
     register,
+    setValue,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<UpdateProfileValues>({ resolver: yupResolver(loginFormSchema) });
+
+  useEffect(() => {
+    if (user) {
+      setValue("name", user?.name);
+      setValue("email", user?.email);
+    }
+  }, [user, setValue]);
 
   const updateProfile = useMutation(
     async (data: UpdateProfileValues) => {
@@ -72,6 +89,7 @@ export default function Dashboard() {
       onSuccess: async () => {
         await queryClient.invalidateQueries(["users"]);
         toast.success("Perfil atualizado com sucesso!");
+        reset();
       },
     }
   );
@@ -105,7 +123,11 @@ export default function Dashboard() {
 
         image: base64String,
       };
-      await updateProfile.mutateAsync(formData);
+      try {
+        await updateProfile.mutateAsync(formData);
+      } catch (err: any) {
+        toast.error(err?.response?.data?.message);
+      }
     };
 
     if (data?.profilePicture?.[0]) {
@@ -132,7 +154,11 @@ export default function Dashboard() {
             ? data?.passwordConfirmation
             : null,
       };
-      await updateProfile.mutateAsync(formData);
+      try {
+        await updateProfile.mutateAsync(formData);
+      } catch (err: any) {
+        toast.error(err?.response?.data?.message);
+      }
     }
   };
 
@@ -150,9 +176,10 @@ export default function Dashboard() {
         isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
       } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
       >
-        <DarkModeButton tailwindCss="absolute top-11 right-28" />
+        <DarkModeButton tailwindCss="absolute top-11 right-28 z-50 lgw:top-12 lgw:right-10 2smw:top-16 " />
 
         <div className="flex w-full items-center justify-center">
+
           <Form handleSubmit={handleSubmit} handleSubmitParam={onSubmit}>
             <ProfilePictureInput
               {...register("profilePicture")}
@@ -167,7 +194,6 @@ export default function Dashboard() {
               name="name"
               type="text"
               error={errors?.name}
-              defaultValue={user?.name}
               requiredField
             />
 
@@ -177,7 +203,6 @@ export default function Dashboard() {
               name="email"
               type="text"
               error={errors?.email}
-              defaultValue={user?.email}
               requiredField
             />
 
@@ -196,6 +221,7 @@ export default function Dashboard() {
               name="newPassword"
               type="password"
               error={errors?.newPassword}
+              onChangeFunc={setNewPassword}
             />
 
             <Input
