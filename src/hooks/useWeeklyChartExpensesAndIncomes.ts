@@ -10,22 +10,19 @@ type IncomeAndExpenseTitles = {
   type: string;
   notes?: string;
   referenceDate: string;
-  dueDate?: string;
-  payDate?: string;
   inative_at?: string | null;
 };
 
 export async function getLast7DaysExpenses(type: string, isSevenOrIsThirty: number) {
   const today = new Date();
-  const last7Days = new Date(today.getTime() - isSevenOrIsThirty * 24 * 60 * 60 * 1000); // set last 7 days period
+  const last7Days = new Date(today.getTime() - isSevenOrIsThirty * 24 * 60 * 60 * 1000);
   
-  // set hours to 00:00:00 and 23:59:59.999 with -3h gmt time
   last7Days.setHours(-3, 0, 0, 0);
   today.setHours(20, 59, 59, 999);
 
-
   const initialDate = formatDateString(last7Days);
   const finalDate = formatDateString(today);
+
   const { data } = await api.get("/dashboard", {
     params: {
       initialDate,
@@ -56,7 +53,6 @@ export async function getLast7DaysExpenses(type: string, isSevenOrIsThirty: numb
 
     return filteredData?.reduce((acc, curr) => acc + curr.value, 0) ?? 0;
   });
-
   return last7DaysExpenses.reverse();
 }
 

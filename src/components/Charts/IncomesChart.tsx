@@ -72,6 +72,7 @@ export function IncomesChart() {
         show: true,
       },
       labels: {
+        formatter: formatCurrency,
         style: { fontWeight: "bold" },
       },
       title: {

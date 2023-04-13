@@ -11,8 +11,6 @@ type ExpenseTitles = {
   type: "EXPENSE";
   notes?: string;
   referenceDate: string;
-  dueDate?: string;
-  payDate?: string;
   inative_at?: string | null;
 };
 
@@ -23,8 +21,6 @@ type IncomeTitles = {
   type: "INCOME";
   notes?: string;
   referenceDate: string;
-  dueDate?: string;
-  payDate?: string;
   inative_at?: string | null;
 };
 
@@ -45,7 +41,6 @@ export async function getCashFlow(initialDate: string, finalDate: string): Promi
     },
   });
   
-
   return {
     totalExpenses: formatCurrency(data?.totalExpenses),
     totalIncomes: formatCurrency(data?.totalIncomes),

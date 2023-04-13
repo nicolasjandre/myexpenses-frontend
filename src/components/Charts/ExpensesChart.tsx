@@ -71,6 +71,7 @@ export function ExpensesChart() {
         show: true,
       },
       labels: {
+        formatter: formatCurrency,
         style: { fontWeight: "bold" },
       },
       title: {

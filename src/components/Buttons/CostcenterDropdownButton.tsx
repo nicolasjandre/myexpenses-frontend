@@ -1,6 +1,7 @@
 import { useCostCenters } from "@/hooks/useCostCenters";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
+import { IoMdBookmarks } from "react-icons/io";
 
 interface CostcenterDropdownProps {
   type: string;
@@ -24,7 +25,7 @@ export function CostcenterDropdown({
   setIsCostcenterDropdownOpen,
   setCostCenter,
 }: CostcenterDropdownProps) {
-  const [ costCenterDesc, setCostCenterDesc] = useState("Categoria");
+  const [costCenterDesc, setCostCenterDesc] = useState("Categoria");
   const { data: costCenters } = useCostCenters();
   const ref = useDetectClickOutside({
     onTriggered: () => setIsCostcenterDropdownOpen(false),
@@ -43,14 +44,15 @@ export function CostcenterDropdown({
             ref={ref}
             onClick={() => setIsCostcenterDropdownOpen((prev) => !prev)}
             type="button"
-            className="mt-2 inline-flex h-12 w-[100%] items-center justify-between gap-x-1.5
-            rounded-lg border border-gray-400 bg-zinc-100 p-4 text-sm text-lg font-semibold
+            className="relative mt-2 inline-flex h-12 w-[100%] items-center justify-between gap-x-1.5
+            rounded-lg border border-gray-400 bg-zinc-100 p-4 pl-9 text-sm text-lg font-semibold
             text-black shadow-md transition-colors ease-in focus:outline-double focus:outline-gray-400
              dark:bg-glass-100 dark:text-white"
             id="menu-button"
             aria-expanded="true"
             aria-haspopup="true"
           >
+            <IoMdBookmarks className="absolute left-3 text-xl" />
             {costCenterDesc}
             <svg
               className="-mr-1 h-5 w-5 text-black dark:text-white"
@@ -86,7 +88,12 @@ export function CostcenterDropdown({
               )
               .map((costCenter: CostCenter) => (
                 <a
-                  onClick={() => handleCostCenterDesc(costCenter?.id, costCenter?.description)}
+                  onClick={() =>
+                    handleCostCenterDesc(
+                      costCenter?.id,
+                      costCenter?.description
+                    )
+                  }
                   key={costCenter?.id}
                   href="#"
                   className="text-md flex items-center gap-2 px-4 py-2 transition-colors ease-in hover:bg-gray-600

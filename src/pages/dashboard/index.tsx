@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import nookies from "nookies";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Sidebar from "@/components/Sidebar";
@@ -20,15 +20,24 @@ import { UpdateUserBalanceModal } from "@/components/Modals/UpdateUserBalanceMod
 import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
 import { CategoryExpensesPieChart } from "@/components/Charts/CategoryExpensesPieChart";
 import { CategoryIncomesPieChart } from "@/components/Charts/CategoryIncomesPieChart";
+import { ExpenseIncomesModalContext } from "@/contexts/ExpenseIncomesModalContext";
 
 export default function Dashboard() {
   const { data: cashFlow } = useCashFlow();
-
   const { data: user } = useUser();
   const { isSidebarClosed } = useContext(SidebarContext);
-  const { setIsUserBalanceModalOpen } = useContext(UserBalanceModalContext);
+  const { isUserBalanceModalOpen, setIsUserBalanceModalOpen } = useContext(UserBalanceModalContext);
   const [modalType, setModalType] = useState<string>("");
   const { theme } = useTheme();
+  const { isExpenseIncomesModalOpen } = useContext(ExpenseIncomesModalContext);
+  
+  useEffect(() => {
+    if (isUserBalanceModalOpen || isExpenseIncomesModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isUserBalanceModalOpen, isExpenseIncomesModalOpen])
 
   return (
     <>
@@ -42,12 +51,10 @@ export default function Dashboard() {
 
       <div
         className={`flex min-h-screen flex-col gap-4 p-6 pl-24 pr-24
-      transition-all ease-in ${
-        isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
-      } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
+      transition-all ease-in ${isSidebarClosed ? "ml-[71px]" : "ml-[231px]"} xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
       >
         <Header />
-        <div className="flex items-center justify-between smw:flex-col smw:gap-2">
+        <div className={"flex items-center justify-between smw:flex-col smw:gap-2"}>
           <h1 className="text-4xl text-black dark:text-white smw:text-center">
             Dashboard
           </h1>

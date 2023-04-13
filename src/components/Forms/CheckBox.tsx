@@ -14,7 +14,7 @@ interface CheckboxProps extends InputHTMLAttributes<any> {
   checkedTitle: string;
   unCheckedTitle: string;
   isToggleBoxChecked: boolean;
-  setIsToggleBoxChecked: Dispatch<SetStateAction<boolean>>;
+  setIsToggleBoxChecked?: Dispatch<SetStateAction<boolean>>;
 }
 
 const CheckboxBase: ForwardRefRenderFunction<
@@ -34,35 +34,40 @@ const CheckboxBase: ForwardRefRenderFunction<
   ref
 ) => {
   return (
-    <label className="relative inline-flex items-center cursor-pointer">
-      <input
-        type="checkbox"
-        {...rest}
-        className="sr-only peer"
-        onChange={() => setIsToggleBoxChecked((prev) => !prev)}
-        ref={ref}
-      />
-      <div
-        className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 rounded-full
-                 peer-checked:after:translate-x-full
-                 peer-checked:after:border-green after:content-[''] after:absolute after:top-[2px] after:left-[2px]
-                 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all
-                 peer-checked:bg-green-600"
-      ></div>
+    <div className="flex items-center">
       <span
-        className={`ml-3 font-medium text-md ${
+        className={`text-md ml-3 font-medium ${
           isToggleBoxChecked ? "text-green-600" : "text-red-400"
         }`}
       >
         {isToggleBoxChecked ? checkedTitle : unCheckedTitle}
       </span>
-      {label && (
-        <label className="font-bold" htmlFor={checkboxName}>
-          {label}
-        </label>
-      )}
-      {error && <p className="text-sm text-red-600">{error?.message}</p>}
-    </label>
+      <label className="relative inline-flex cursor-pointer items-center">
+        <input
+          type="checkbox"
+          {...rest}
+          className="peer sr-only"
+          onChange={() => {
+            setIsToggleBoxChecked && setIsToggleBoxChecked((prev) => !prev);
+          }}
+          ref={ref}
+        />
+        <div
+          className="peer-checked:after:border-green h-6 w-11 rounded-full bg-gray-200 after:absolute
+                 after:top-[2px]
+                 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border
+                 after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-focus:outline-none
+                 peer-focus:ring-4"
+        ></div>
+
+        {label && (
+          <label className="font-bold" htmlFor={checkboxName}>
+            {label}
+          </label>
+        )}
+        {error && <p className="text-sm text-red-600">{error?.message}</p>}
+      </label>
+    </div>
   );
 };
 

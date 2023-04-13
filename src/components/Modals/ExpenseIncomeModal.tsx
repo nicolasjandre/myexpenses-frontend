@@ -1,11 +1,10 @@
 import { ExpenseIncomesModalContext } from "@/contexts/ExpenseIncomesModalContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Input } from "../Forms/Input";
-import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { InputBRL } from "../Forms/InputFormat";
 import { Textarea } from "../Forms/Textarea";
-import { Checkbox } from "../Forms/CheckBox";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdDescription } from "react-icons/md";
 import { Datepicker } from "../Datepicker";
 import { extractNumberFromString } from "@/utils/extractNumberFromString";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
@@ -15,6 +14,8 @@ import api from "@/services/api";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CostcenterDropdown } from "../Buttons/CostcenterDropdownButton";
+import { FaMoneyBillWave } from "react-icons/fa";
+import { CreditCardDropdown } from "../Buttons/CreditCardDropdown";
 
 interface ExpenseIncomeModalProps {
   title: string;
@@ -24,6 +25,7 @@ interface CreateTitleData {
   description: string;
   costCenter: number;
   notes: string;
+  installment: number;
   isPaidCheckbox: boolean;
   value: string;
 }
@@ -34,17 +36,20 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
   const [selectedReferenceDate, setSelectedReferenceDate] = useState<Date>(
     new Date()
   );
-  const [selectedDueDate, setSelectedDueDate] = useState<Date>(new Date());
-  const [costCenter, setCostCenter] = useState<number>(0);
+  const [costCenterId, setCostCenterId] = useState<number>(0);
+  const [creditCardId, setCreditCardId] = useState<number>(0);
   const [isCostcenterDropdownOpen, setIsCostcenterDropdownOpen] =
     useState<boolean>(false);
-  const [isToggleBoxChecked, setIsToggleBoxChecked] = useState<boolean>(false);
+  const [isCreditCardDropdownOpen, setIsCreditCardDropdownOpen] =
+    useState<boolean>(false);
   const queryClient = useQueryClient();
 
   function handleCloseModal() {
-    reset();
-    setIsToggleBoxChecked(false);
-    setCostCenter(0);
+    reset({
+      installment: 1,
+    });
+    setSelectedReferenceDate(new Date());
+    setCostCenterId(0);
     setIsExpenseIncomesModalOpen(false);
   }
 
@@ -75,6 +80,12 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
   const loginFormSchema = yup.object().shape({
     value: yup.string().required("Você precisa inserir um valor"),
 
+    installment: yup
+      .number()
+      .required("Você precisa inserir um valor")
+      .max(99)
+      .min(1),
+
     description: yup
       .string()
       .required(
@@ -88,6 +99,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CreateTitleData>({
     resolver: yupResolver(loginFormSchema),
@@ -95,26 +107,30 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
 
   const createTitle = useMutation(
     async (data: CreateTitleData) => {
+      console.log(data)
+      console.log(creditCardId)
       const response = await api.post("/titles", {
         costCenter: {
-          id: costCenter,
+          id: costCenterId,
         },
         description: data?.description,
         notes: data?.notes,
         payDate: data?.isPaidCheckbox ? new Date() : null,
+        installment: creditCardId === 0 ? 1 : data?.installment,
+        creditCardId: title.includes("despesa") ? creditCardId : 0,
         value: extractNumberFromString(data?.value),
-        dueDate: data?.isPaidCheckbox === true ? new Date() : selectedDueDate,
         referenceDate: selectedReferenceDate,
         type: title.includes("despesa") ? "EXPENSE" : "INCOME",
       });
 
-      setCostCenter(0);
+      setCostCenterId(0);
 
       return response.data;
     },
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries(["cashFlow"]);
+        await queryClient.invalidateQueries(["users"]);
         await queryClient.invalidateQueries(["lastDaysIncomes"]);
         await queryClient.invalidateQueries(["lastDaysExpenses"]);
         await queryClient.invalidateQueries(["lastDaysPieExpenses"]);
@@ -134,9 +150,12 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
       reset({
         description: "",
         notes: "",
+        installment: 1,
       });
 
       await createTitle.mutateAsync(data);
+
+      setSelectedReferenceDate(new Date());
     } catch (error: any) {
       setIsExpenseIncomesModalOpen(false);
       if (error?.response?.data?.message) {
@@ -146,6 +165,10 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
       }
     }
   };
+
+  useEffect(() => {
+    setValue("installment", 1);
+  }, []);
 
   return (
     <>
@@ -179,10 +202,60 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                     <InputBRL
                       {...register("value")}
                       name="value"
-                      placeholder="R$0,00"
+                      placeholder="R$ 0,00"
                       error={errors?.value}
                       autoComplete="off"
+                      Icon={FaMoneyBillWave}
                       autoFocus
+                    />
+
+                    <Input
+                      {...register("description")}
+                      name="description"
+                      type="text"
+                      placeholder="Descrição"
+                      error={errors?.description}
+                      Icon={MdDescription}
+                      autoComplete="off"
+                    />
+
+                    {title.includes("despesa") && (
+                      <div className={`flex items-center justify-end gap-2 ${creditCardId === 0 ? "opacity-50" : ""}`}>
+                        <label htmlFor="installment">
+                          <span className="pl-1 font-bold text-black dark:text-white">
+                            Prestações:
+                          </span>
+                        </label>
+
+                        <Input
+                          {...register("installment")}
+                          error={errors?.installment}
+                          maxLength={2}
+                          tailwindCss={`w-[79px] ${creditCardId === 0 ? "opacity-50" : ""}`}
+                          name="installment"
+                          type="number"
+                          disabled={creditCardId === 0}
+                        />
+                      </div>
+                    )}
+
+                    {title.includes("despesa") && (
+                      <CreditCardDropdown
+                        isCreditCardDropdownOpen={isCreditCardDropdownOpen}
+                        setIsCreditCardDropdownOpen={
+                          setIsCreditCardDropdownOpen
+                        }
+                        creditCard={creditCardId}
+                        setCreditCard={setCreditCardId}
+                      />
+                    )}
+
+                    <CostcenterDropdown
+                      type={title.includes("despesa") ? "EXPENSE" : "INCOME"}
+                      isCostcenterDropdownOpen={isCostcenterDropdownOpen}
+                      setIsCostcenterDropdownOpen={setIsCostcenterDropdownOpen}
+                      costCenter={costCenterId}
+                      setCostCenter={setCostCenterId}
                     />
 
                     <Datepicker
@@ -193,57 +266,6 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                       }
                       setDate={setSelectedReferenceDate}
                     />
-
-                    <Checkbox
-                      isToggleBoxChecked={isToggleBoxChecked}
-                      setIsToggleBoxChecked={setIsToggleBoxChecked}
-                      checkboxName="isPaidCheckbox"
-                      checkedTitle={
-                        title.includes("despesa") ? "Pago!" : "Recebido!"
-                      }
-                      unCheckedTitle={
-                        title.includes("despesa") ? "À pagar" : "A receber"
-                      }
-                      {...register("isPaidCheckbox")}
-                    />
-
-                    <Input
-                      {...register("description")}
-                      name="description"
-                      type="text"
-                      placeholder="Descrição"
-                      error={errors?.description}
-                      autoComplete="off"
-                    />
-
-                    <CostcenterDropdown
-                      type={title.includes("despesa") ? "EXPENSE" : "INCOME"}
-                      isCostcenterDropdownOpen={isCostcenterDropdownOpen}
-                      setIsCostcenterDropdownOpen={setIsCostcenterDropdownOpen}
-                      costCenter={costCenter}
-                      setCostCenter={setCostCenter}
-                    />
-
-                    {isToggleBoxChecked ? (
-                      <div className="flex flex-col gap-2">
-                        <label>{title.includes("despesa") ? "Data do vencimento:" : "Data do pagamento:"}</label>
-                        <div className="flex h-12 cursor-not-allowed items-center rounded-lg
-                         border border-gray-400 bg-zinc-100 opacity-60 dark:bg-glass-100">
-                          <span className="px-4 text-center">
-                            {title.includes("despesa") ? "Pago!" : "Recebido!"}
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <Datepicker
-                        setDate={setSelectedDueDate}
-                        title={
-                          title.includes("despesa")
-                            ? "Data do vencimento:"
-                            : "Data do pagamento:"
-                        }
-                      />
-                    )}
 
                     <Textarea
                       {...register("notes")}

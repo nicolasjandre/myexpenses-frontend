@@ -32,7 +32,7 @@ export function Datepicker({ title, setDate, ...rest }: DatepickerProps) {
       disabledText: "bg-red-500",
       input:
         "bg-zinc-100 dark:bg-glass-100 h-12 focus:outline-double focus:border-gray-500 dark:focus:border-gray-400 focus:outline-gray-500 dark:outline-glass-100 outline-gray-400 border-gray-400 border rounded-lg",
-      inputIcon: "",
+      inputIcon: "text-black dark:text-white",
       selected: "",
     },
     icons: {
@@ -47,7 +47,7 @@ export function Datepicker({ title, setDate, ...rest }: DatepickerProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor="">{title}</label>
+      <label className="font-bold pl-1" htmlFor="">{title}</label>
       <DatePicker
         {...rest}
         options={options}
