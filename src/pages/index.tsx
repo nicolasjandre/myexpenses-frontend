@@ -77,7 +77,6 @@ export default function Home() {
 
         <Button
           type="submit"
-          tailwindClass={"mt-4"}
           title={isSubmitting ? "Entrando..." : "Entrar"}
           isDisabled={isSubmitting}
           disabled={isSubmitting}

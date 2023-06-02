@@ -8,7 +8,6 @@ import { Box } from "@/components/Dashboard/Box";
 import { MdAccountBalanceWallet, MdBalance } from "react-icons/md";
 import { IoMdArrowRoundUp, IoMdArrowRoundDown } from "react-icons/io";
 import { useCashFlow } from "@/hooks/useCashFlow";
-import { DropdownButton } from "@/components/Buttons/DropdownButton";
 import { IncomesChart } from "@/components/Charts/IncomesChart";
 import { ExpensesChart } from "@/components/Charts/ExpensesChart";
 import { ExpenseIncomeModal } from "@/components/Modals/ExpenseIncomeModal";
@@ -21,6 +20,7 @@ import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
 import { CategoryExpensesPieChart } from "@/components/Charts/CategoryExpensesPieChart";
 import { CategoryIncomesPieChart } from "@/components/Charts/CategoryIncomesPieChart";
 import { ExpenseIncomesModalContext } from "@/contexts/ExpenseIncomesModalContext";
+import { DropdownButtonDashboard } from "@/components/Buttons/DropdownButtonDashboard";
 
 export default function Dashboard() {
   const { data: cashFlow } = useCashFlow();
@@ -58,7 +58,7 @@ export default function Dashboard() {
           <h1 className="text-4xl text-black dark:text-white smw:text-center">
             Dashboard
           </h1>
-          <DropdownButton
+          <DropdownButtonDashboard
             setModalType={setModalType}
             tailwindCss="smw:-left-[40px]"
           />

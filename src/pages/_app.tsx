@@ -15,6 +15,7 @@ import { ChoosenMonthProvider } from "@/contexts/ChoosenMonthContext";
 import { Last7OrLast30DaysChartProvider } from "@/contexts/Last7OrLast30DaysChartContext";
 import { useRouter } from "next/router";
 import { GlobalLoader } from "@/components/Loaders/GlobalLoader";
+import { CreditCardModalProvider } from "@/contexts/CreditCardModalContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [load, setLoad] = useState({
@@ -73,18 +74,20 @@ export default function App({ Component, pageProps }: AppProps) {
           <ThemeProvider attribute="class">
             <Last7OrLast30DaysChartProvider>
               <ChoosenMonthProvider>
-                <UserBalanceModalProvider>
-                  <AuthProvider>
-                    <ExpenseIncomesModalProvider>
-                      <SidebarProvider>
-                        <DropdownButtonProvider>
-                          <Component {...pageProps} />
-                        </DropdownButtonProvider>
-                      </SidebarProvider>
-                    </ExpenseIncomesModalProvider>
-                  </AuthProvider>
-                  <ReactQueryDevtools initialIsOpen={false} />
-                </UserBalanceModalProvider>
+                <CreditCardModalProvider>
+                  <UserBalanceModalProvider>
+                    <AuthProvider>
+                      <ExpenseIncomesModalProvider>
+                        <SidebarProvider>
+                          <DropdownButtonProvider>
+                            <Component {...pageProps} />
+                          </DropdownButtonProvider>
+                        </SidebarProvider>
+                      </ExpenseIncomesModalProvider>
+                    </AuthProvider>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                  </UserBalanceModalProvider>
+                </CreditCardModalProvider>
               </ChoosenMonthProvider>
             </Last7OrLast30DaysChartProvider>
           </ThemeProvider>

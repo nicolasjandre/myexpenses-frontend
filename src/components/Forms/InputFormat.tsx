@@ -36,7 +36,7 @@ const InputFormatted: ForwardRefRenderFunction<NumericFormatProps, InputProps> =
         {...rest}
       />
       {Icon && <Icon className="absolute text-xl left-3 top-[50%] -translate-y-[50%]" />}
-      {error && <p className="text-sm text-red-600">{error?.message}</p>}
+      {error && <p className="absolute -bottom-[22px] text-sm text-red-600">{error?.message}</p>}
     </div>
   );
 };

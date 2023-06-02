@@ -73,7 +73,6 @@ export function CategoryIncomesPieChart() {
 
   return (
     <>
-      {data?.label?.length !== 0 && (
         <div
           className="w-[50%] overflow-hidden rounded-lg bg-white px-2 pb-2 shadow-glass
     shadow-glass-100 backdrop-blur-md transition-colors ease-in dark:bg-black_bg-100 xlw:w-[100%]
@@ -100,7 +99,7 @@ export function CategoryIncomesPieChart() {
               <div className="flex h-[160px] w-full items-center justify-center">
                 <MiniLoader />
               </div>
-            ) : (
+            ) : data?.label?.length !== 0 && data !== undefined ? (
               <IncomesPieChart
                 width="100%"
                 type="pie"
@@ -108,10 +107,13 @@ export function CategoryIncomesPieChart() {
                 series={incomeOptions?.series}
                 height={400}
               />
+            ) : (
+              <div className="flex h-[160px] w-full items-center justify-center">
+                <p>Nenhum dado até aqui</p>
+                </div>
             )}
           </div>
         </div>
-      )}
     </>
   );
 }

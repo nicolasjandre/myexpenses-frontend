@@ -11,7 +11,7 @@ export function Form({handleSubmit, handleSubmitParam, tailwindCss, children}: F
   return (
     <form
       onSubmit={handleSubmit(handleSubmitParam)}
-      className={`flex w-full max-w-md flex-col justify-around gap-2 rounded-xl
+      className={`flex w-full max-w-md flex-col justify-around gap-5 rounded-xl
          border-2 bg-white p-6 pt-4 text-left text-black
           shadow-glass backdrop-blur-md dark:border-glass-100 dark:bg-black_bg-100 dark:text-white
           ${tailwindCss}`}

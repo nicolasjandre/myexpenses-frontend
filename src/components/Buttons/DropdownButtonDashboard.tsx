@@ -9,7 +9,7 @@ interface DropdownButtonProps {
   setModalType: Dispatch<SetStateAction<string>>;
 }
 
-export function DropdownButton({ tailwindCss, setModalType }: DropdownButtonProps) {
+export function DropdownButtonDashboard({ tailwindCss, setModalType }: DropdownButtonProps) {
   const { isDropdownOpen, setIsDropdownOpen } = useContext(
     DropdownButtonContext
   );
