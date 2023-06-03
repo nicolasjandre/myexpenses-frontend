@@ -1,3 +1,4 @@
+import { formatUnderlinedString } from "@/utils/formatUnderlinedStrings";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { IoMdBookmarks } from "react-icons/io";
@@ -13,6 +14,7 @@ interface BanksDropdownProps {
     setIsBanksDropdownOpen: Dispatch<SetStateAction<boolean>>;
     banks: Bank[];
     setBank: Dispatch<SetStateAction<string>>;
+    bank: string;
 }
 
 export function BanksDropdown({
@@ -20,6 +22,7 @@ export function BanksDropdown({
     setIsBanksDropdownOpen,
     banks,
     setBank,
+    bank,
 }: BanksDropdownProps) {
     const [banksDesc, setBanksDesc] = useState("Banco");
     const ref = useDetectClickOutside({
@@ -47,7 +50,7 @@ export function BanksDropdown({
                         aria-haspopup="true"
                     >
                         <RiBankFill className="absolute left-3 text-xl" />
-                        {banksDesc}
+                        {bank ? formatUnderlinedString(bank) : banksDesc}
                         <svg
                             className="-mr-1 h-5 w-5 text-black dark:text-white"
                             viewBox="0 0 20 20"

@@ -1,3 +1,4 @@
+import { formatUnderlinedString } from "@/utils/formatUnderlinedStrings";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { FaFlag } from "react-icons/fa";
@@ -12,6 +13,7 @@ interface FlagsDropdownProps {
     setIsFlagsDropdownOpen: Dispatch<SetStateAction<boolean>>;
     flags: Flag[];
     setFlag: Dispatch<SetStateAction<string>>;
+    flag: string;
 }
 
 export function FlagsDropdown({
@@ -19,6 +21,7 @@ export function FlagsDropdown({
     setIsFlagsDropdownOpen,
     flags,
     setFlag,
+    flag
 }: FlagsDropdownProps) {
     const [flagsDesc, setFlagsDesc] = useState("Bandeira");
     const ref = useDetectClickOutside({
@@ -46,7 +49,7 @@ export function FlagsDropdown({
                         aria-haspopup="true"
                     >
                         <FaFlag className="absolute left-3 text-xl" />
-                        {flagsDesc}
+                        {flag ? formatUnderlinedString(flag) : flagsDesc}
                         <svg
                             className="-mr-1 h-5 w-5 text-black dark:text-white"
                             viewBox="0 0 20 20"

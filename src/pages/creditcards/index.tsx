@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import nookies from "nookies";
 import { GetServerSideProps } from "next";
 import Sidebar from "@/components/Sidebar";
@@ -10,11 +10,10 @@ import { CreditCard } from "@/components/CreditCard";
 import { ButtonNewCreditCard } from "@/components/Buttons/ButtonNewCreditCard";
 import { useCreditCards } from "@/hooks/useCreditCards";
 import { useUser } from "@/hooks/useUser";
-import { useBanks } from "@/hooks/useBanks";
 import { CreditCardModalContext } from "@/contexts/CreditCardModalContext";
 import { CreditCardModal } from "@/components/Modals/CreditCardModal";
 
-type CreditCardProp = {
+type CreditCard = {
     id: number;
     name: string;
     creditLimit: number;
@@ -31,7 +30,8 @@ export default function Dashboard() {
     const { theme } = useTheme();
     const { data: creditCards } = useCreditCards();
     const { data: user } = useUser();
-    const { isCreditCardModalOpen } = useContext(CreditCardModalContext);
+    const { isCreditCardModalOpen, setIsCreditCardModalOpen } = useContext(CreditCardModalContext);
+    const [creditCardBeingEdited, setCreditCardBeingEdited] = useState<CreditCard | null>(null);
 
     useEffect(() => {
         if (isCreditCardModalOpen) {
@@ -44,7 +44,10 @@ export default function Dashboard() {
     return (
         <>
             <ToastContainer autoClose={1500} theme={`${theme === "dark" ? "dark" : "light"}`} />
-            <CreditCardModal />
+            <CreditCardModal
+                creditCardBeingEdited={creditCardBeingEdited}
+                setCreditCardBeingEdited={setCreditCardBeingEdited}
+            />
             <Sidebar />
 
             <div
@@ -63,12 +66,16 @@ export default function Dashboard() {
 
                 <div className="flex flex-wrap justify-center gap-6">
                     {creditCards?.length > 0 ? (
-                        creditCards?.map((creditCard: CreditCardProp) => {
+                        creditCards?.map((creditCard: CreditCard) => {
                             return (
                                 <CreditCard
                                     name={user?.name!}
                                     key={creditCard?.id}
                                     creditCard={creditCard}
+                                    onClick={() => {
+                                        setCreditCardBeingEdited(creditCard);
+                                        setIsCreditCardModalOpen(true);
+                                    }}
                                 />
                             );
                         })

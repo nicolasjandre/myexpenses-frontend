@@ -1,3 +1,6 @@
+import { CreditCardModalContext } from "@/contexts/CreditCardModalContext";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { useContext } from "react";
 import { RiMastercardFill, RiVisaFill } from "react-icons/ri";
 
 type CreditCardProp = {
@@ -15,10 +18,10 @@ type CreditCardProp = {
 interface CreditCardProps {
     name: string;
     creditCard: CreditCardProp;
+    onClick: () => void;
 }
 
-export function CreditCard({ name, creditCard }: CreditCardProps) {
-    
+export function CreditCard({ name, creditCard, onClick }: CreditCardProps) {
     const bankNames = [
         "NUBANK",
         "BTG_PACTUAL",
@@ -35,7 +38,8 @@ export function CreditCard({ name, creditCard }: CreditCardProps) {
 
     return (
         <div
-            className={`w-[440px] overflow-hidden rounded-lg shadow-2xl
+            onClick={onClick}
+            className={`w-[440px] cursor-pointer overflow-hidden rounded-lg shadow-2xl transition-transform duration-500 hover:scale-105
                 ${defaultColor && "bg-slate-700"}
                 ${creditCard?.bank === "NUBANK" && "bg-violet-600"}
                 ${creditCard?.bank === "BTG_PACTUAL" && "bg-blue-900"}
@@ -49,12 +53,16 @@ export function CreditCard({ name, creditCard }: CreditCardProps) {
                 ${creditCard?.bank === "ITAU" && "bg-pink-500"}
             `}
         >
-            <div className="md:flex">
+            <div className="relative md:flex">
                 <div className="w-full p-4">
                     <div className="flex items-center justify-between text-white">
                         <span className="text-3xl font-bold">
-                            <small className="text-sm font-light">R$ </small>
-                            {creditCard?.creditLimit ? creditCard?.creditLimit + ",00": "1000"}
+                            {creditCard?.creditLimit
+                                ? formatCurrency(creditCard?.creditLimit)
+                                : "1000"}
+                            <span className="ml-4 text-sm font-normal">
+                                {formatCurrency(creditCard?.availableLimit)}
+                            </span>
                         </span>
                         {creditCard?.flag === "MASTERCARD" && (
                             <RiMastercardFill className="text-4xl" />

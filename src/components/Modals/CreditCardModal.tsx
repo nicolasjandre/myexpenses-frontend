@@ -16,6 +16,7 @@ import { FlagsDropdown } from "../Buttons/FlagsDropdown";
 import { useFlags } from "@/hooks/useFlags";
 import { extractNumberFromString } from "@/utils/extractNumberFromString";
 import "react-toastify/dist/ReactToastify.css";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface CreateCreditCardData {
     name: string;
@@ -26,7 +27,27 @@ interface CreateCreditCardData {
     dueDay: number | string;
 }
 
-export function CreditCardModal() {
+type CreditCard = {
+    id: number;
+    name: string;
+    creditLimit: number;
+    availableLimit: number;
+    closingDay: number;
+    dueDay: number;
+    flag: string;
+    bank: string;
+    inative_at: Date | null;
+};
+
+interface CreditCardModalProps {
+    creditCardBeingEdited: CreditCard | null;
+    setCreditCardBeingEdited: React.Dispatch<React.SetStateAction<CreditCard | null>>;
+}
+
+export function CreditCardModal({
+    creditCardBeingEdited,
+    setCreditCardBeingEdited,
+}: CreditCardModalProps) {
     const { isCreditCardModalOpen, setIsCreditCardModalOpen } = useContext(CreditCardModalContext);
     const [isBankDropdownOpen, setIsBankDropdownOpen] = useState<boolean>(false);
     const [isFlagDropdownOpen, setIsFlagDropdownOpen] = useState<boolean>(false);
@@ -37,6 +58,8 @@ export function CreditCardModal() {
     const queryClient = useQueryClient();
 
     function handleCloseModal() {
+        reset({});
+        setCreditCardBeingEdited(null);
         setIsCreditCardModalOpen(false);
     }
 
@@ -93,6 +116,17 @@ export function CreditCardModal() {
         formState: { errors, isSubmitting },
     } = useForm<CreateCreditCardData>({
         resolver: yupResolver(loginFormSchema),
+        defaultValues: {
+            bank: creditCardBeingEdited?.bank,
+            closingDay: creditCardBeingEdited?.closingDay,
+            creditLimit:
+                (creditCardBeingEdited?.creditLimit &&
+                    formatCurrency(creditCardBeingEdited?.creditLimit)) ||
+                "",
+            dueDay: creditCardBeingEdited?.dueDay,
+            flag: creditCardBeingEdited?.flag,
+            name: creditCardBeingEdited?.name,
+        },
     });
 
     const createCreditCard = useMutation(
@@ -111,8 +145,45 @@ export function CreditCardModal() {
         {
             onSuccess: async () => {
                 await queryClient.invalidateQueries(["creditCards"]);
-                setIsCreditCardModalOpen(false);
-                toast.success("Cartão de crédito cadastrado com sucesso");
+                handleCloseModal();
+                toast.success("Cartão cadastrado com sucesso");
+            },
+        }
+    );
+
+    const editCreditCard = useMutation(
+        async (data: CreateCreditCardData) => {
+            const response = await api.put(`/creditcard/${creditCardBeingEdited?.id}`, {
+                name: data?.name,
+                creditLimit: extractNumberFromString(data?.creditLimit),
+                flag: flag,
+                bank: bank,
+                closingDay: data?.closingDay,
+                dueDay: data?.dueDay,
+            });
+
+            return response.data;
+        },
+        {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(["creditCards"]);
+                handleCloseModal();
+                toast.success("Cartão editado com sucesso");
+            },
+        }
+    );
+
+    const deleteCreditCard = useMutation(
+        async () => {
+            const response = await api.delete(`/creditcard/${creditCardBeingEdited?.id}`);
+
+            return response.data;
+        },
+        {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(["creditCards"]);
+                handleCloseModal();
+                toast.success("Cartão deletado com sucesso");
             },
         }
     );
@@ -123,7 +194,11 @@ export function CreditCardModal() {
                 throw new Error("Erro: É necessário escolher um banco e uma bandeira.");
             }
 
-            await createCreditCard.mutateAsync(data);
+            if (creditCardBeingEdited) {
+                await editCreditCard.mutateAsync(data);
+            } else {
+                await createCreditCard.mutateAsync(data);
+            }
 
             setBank("");
             setFlag("");
@@ -134,7 +209,7 @@ export function CreditCardModal() {
                 dueDay: "",
             });
         } catch (error: any) {
-            setIsCreditCardModalOpen(false);
+            handleCloseModal();
             if (error?.response?.data?.message) {
                 toast.error(error?.response?.data?.message);
             } else if (error?.message) {
@@ -144,6 +219,11 @@ export function CreditCardModal() {
             }
         }
     };
+
+    useEffect(() => {
+        setBank(creditCardBeingEdited?.bank!);
+        setFlag(creditCardBeingEdited?.flag!);
+    }, [creditCardBeingEdited]);
 
     return (
         <>
@@ -155,7 +235,9 @@ export function CreditCardModal() {
                                 <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-glass shadow-glass-100 outline-none backdrop-blur-md focus:outline-none">
                                     <div className="flex items-start justify-between rounded-t p-5 dark:bg-black_bg-100">
                                         <h3 className="flex items-center gap-2 text-2xl font-semibold text-black dark:text-white">
-                                            Cadastrar cartão
+                                            {creditCardBeingEdited
+                                                ? "Editar cartão"
+                                                : "Cadastrar cartão"}
                                         </h3>
 
                                         <button
@@ -177,6 +259,7 @@ export function CreditCardModal() {
                                             autoComplete="off"
                                             Icon={FaMoneyBillWave}
                                             autoFocus
+                                            defaultValue={creditCardBeingEdited?.creditLimit}
                                         />
 
                                         <Input
@@ -187,6 +270,7 @@ export function CreditCardModal() {
                                             error={errors?.name}
                                             Icon={MdDescription}
                                             autoComplete="off"
+                                            defaultValue={creditCardBeingEdited?.name}
                                         />
 
                                         <Input
@@ -199,6 +283,7 @@ export function CreditCardModal() {
                                             autoComplete="off"
                                             max={31}
                                             min={1}
+                                            defaultValue={creditCardBeingEdited?.closingDay}
                                         />
 
                                         <Input
@@ -211,6 +296,7 @@ export function CreditCardModal() {
                                             autoComplete="off"
                                             max={31}
                                             min={1}
+                                            defaultValue={creditCardBeingEdited?.dueDay}
                                         />
 
                                         <BanksDropdown
@@ -218,34 +304,56 @@ export function CreditCardModal() {
                                             setIsBanksDropdownOpen={setIsBankDropdownOpen}
                                             banks={banks}
                                             setBank={setBank}
+                                            bank={bank}
                                         />
 
                                         <FlagsDropdown
-                                            flags={flags}
                                             isFlagsDropdownOpen={isFlagDropdownOpen}
-                                            setFlag={setFlag}
                                             setIsFlagsDropdownOpen={setIsFlagDropdownOpen}
+                                            flags={flags}
+                                            setFlag={setFlag}
+                                            flag={flag}
                                         />
                                     </div>
 
                                     {/*footer*/}
-                                    <div className="flex items-center justify-end rounded-b p-6 dark:bg-black_bg-100">
-                                        <button
-                                            className="background-transparent mr-1 mb-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all ease-in hover:text-red-600 focus:outline-none"
-                                            type="button"
-                                            onClick={() => handleCloseModal()}
-                                        >
-                                            Fechar
-                                        </button>
+                                    <div
+                                        className={`flex items-center rounded-b p-6 dark:bg-black_bg-100 ${
+                                            creditCardBeingEdited
+                                                ? "justify-between"
+                                                : "justify-end"
+                                        }`}
+                                    >
+                                        {creditCardBeingEdited && (
+                                            <button
+                                                className="mr-1 mb-1 rounded bg-red-700 px-6 py-3 text-sm font-bold uppercase text-white
+                                                    shadow outline-none transition-all ease-in hover:bg-red-600 hover:shadow-lg
+                                                    focus:outline-none active:bg-red-700"
+                                                disabled={isSubmitting}
+                                                type="button"
+                                                onClick={() => deleteCreditCard.mutate()}
+                                            >
+                                                Deletar
+                                            </button>
+                                        )}
+                                        <div>
+                                            <button
+                                                className="background-transparent mr-1 mb-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all ease-in              hover:text-red-600 focus:outline-none"
+                                                type="button"
+                                                onClick={() => handleCloseModal()}
+                                            >
+                                                Fechar
+                                            </button>
 
-                                        <button
-                                            className="mr-1 mb-1 rounded bg-green-700 px-6 py-3
-                    text-sm font-bold uppercase text-white shadow outline-none transition-all ease-in hover:bg-green-600 hover:shadow-lg focus:outline-none active:bg-emerald-700"
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                        >
-                                            Salvar
-                                        </button>
+                                            <button
+                                                className="mr-1 mb-1 rounded bg-green-700 px-6 py-3
+                                                text-sm font-bold uppercase text-white shadow outline-none transition-all ease-in hover:bg-green-600 hover:shadow-lg focus:outline-none active:bg-emerald-700"
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                            >
+                                                {creditCardBeingEdited ? "Editar" : "Salvar"}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
