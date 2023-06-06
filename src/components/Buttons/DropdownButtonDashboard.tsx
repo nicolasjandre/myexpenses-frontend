@@ -1,6 +1,6 @@
 import { DropdownButtonContext } from "@/contexts/DropdownButtonContext";
 import { ExpenseIncomesModalContext } from "@/contexts/ExpenseIncomesModalContext";
-import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
+import { UserBalanceModalContext } from "@/contexts/UserBalanceModalContext";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 

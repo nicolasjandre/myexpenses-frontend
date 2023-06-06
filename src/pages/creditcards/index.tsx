@@ -12,6 +12,8 @@ import { useCreditCards } from "@/hooks/useCreditCards";
 import { useUser } from "@/hooks/useUser";
 import { CreditCardModalContext } from "@/contexts/CreditCardModalContext";
 import { CreditCardModal } from "@/components/Modals/CreditCardModal";
+import { ConfirmActionModalContext } from "@/contexts/ConfirmActionModalContext";
+import { ConfirmActionModal } from "@/components/Modals/ConfirmActionModal";
 
 type CreditCard = {
     id: number;
@@ -23,6 +25,7 @@ type CreditCard = {
     flag: string;
     bank: string;
     inative_at: Date | null;
+    actionType: string | null;
 };
 
 export default function Dashboard() {
@@ -31,15 +34,17 @@ export default function Dashboard() {
     const { data: creditCards } = useCreditCards();
     const { data: user } = useUser();
     const { isCreditCardModalOpen, setIsCreditCardModalOpen } = useContext(CreditCardModalContext);
+    const { isConfirmActionModalOpen } =
+        useContext(ConfirmActionModalContext);
     const [creditCardBeingEdited, setCreditCardBeingEdited] = useState<CreditCard | null>(null);
 
     useEffect(() => {
-        if (isCreditCardModalOpen) {
+        if (isCreditCardModalOpen || isConfirmActionModalOpen) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "unset";
         }
-    }, [isCreditCardModalOpen]);
+    }, [isCreditCardModalOpen, isConfirmActionModalOpen]);
 
     return (
         <>
@@ -48,13 +53,14 @@ export default function Dashboard() {
                 creditCardBeingEdited={creditCardBeingEdited}
                 setCreditCardBeingEdited={setCreditCardBeingEdited}
             />
+            <ConfirmActionModal/>
             <Sidebar />
 
             <div
                 className={`flex min-h-screen flex-col gap-4 p-6 pl-24 pr-24
-      transition-all ease-in ${
-          isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
-      } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
+                    transition-all ease-in ${
+                        isSidebarClosed ? "ml-[71px]" : "ml-[231px]"
+                    } xlw:pl-8 xlw:pr-8 mdw:ml-[71px]`}
             >
                 <Header />
                 <div className={"flex items-center justify-between smw:flex-col smw:gap-2"}>

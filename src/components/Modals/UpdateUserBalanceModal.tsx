@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import api from "@/services/api";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { UserBalanceModalContext } from "@/contexts/userBalanceModalContext";
+import { UserBalanceModalContext } from "@/contexts/UserBalanceModalContext";
 import { extractNumberFromString } from "@/utils/extractNumberFromString";
 
 interface UpdateUserBalanceData {

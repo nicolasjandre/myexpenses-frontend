@@ -17,6 +17,7 @@ import { CostcenterDropdown } from "../Buttons/CostcenterDropdownButton";
 import { FaMoneyBillWave } from "react-icons/fa";
 import { CreditCardDropdown } from "../Buttons/CreditCardDropdown";
 import "react-toastify/dist/ReactToastify.css";
+import { useEscapeKey } from "@/utils/handleEscapeKey";
 
 interface ExpenseIncomeModalProps {
     title: string;
@@ -50,28 +51,6 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
         setCostCenterId(0);
         setCreditCardId(0);
         setIsExpenseIncomesModalOpen(false);
-    }
-
-    const KEY_NAME_ESC = "Escape";
-    const KEY_EVENT_TYPE = "keyup";
-
-    function useEscapeKey(handleCloseModal: () => void) {
-        const handleEscKey = useCallback(
-            (event: any) => {
-                if (event.key === KEY_NAME_ESC) {
-                    handleCloseModal();
-                }
-            },
-            [handleCloseModal]
-        );
-
-        useEffect(() => {
-            document.addEventListener(KEY_EVENT_TYPE, handleEscKey, false);
-
-            return () => {
-                document.removeEventListener(KEY_EVENT_TYPE, handleEscKey, false);
-            };
-        }, [handleEscKey]);
     }
 
     useEscapeKey(handleCloseModal);
@@ -116,24 +95,29 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
         },
         {
             onSuccess: async () => {
-                await queryClient.invalidateQueries(["cashFlow"]);
-                await queryClient.invalidateQueries(["users"]);
-                await queryClient.invalidateQueries(["lastDaysIncomes"]);
-                await queryClient.invalidateQueries(["lastDaysExpenses"]);
-                await queryClient.invalidateQueries(["lastDaysPieExpenses"]);
-                await queryClient.invalidateQueries(["lastDaysPieIncomes"]);
-                setIsExpenseIncomesModalOpen(false);
                 toast.success(
                     title.includes("despesa")
                         ? "Despesa adicionada com sucesso!"
                         : "Entrada adicionada com sucesso!"
                 );
+
+                await Promise.all([
+                    queryClient.invalidateQueries(["cashFlow"]),
+                    queryClient.invalidateQueries(["users"]),
+                    queryClient.invalidateQueries(["lastDaysIncomes"]),
+                    queryClient.invalidateQueries(["lastDaysExpenses"]),
+                    queryClient.invalidateQueries(["lastDaysPieExpenses"]),
+                    queryClient.invalidateQueries(["lastDaysPieIncomes"]),
+                    queryClient.invalidateQueries(["creditCards"]),
+                ]);
             },
         }
     );
 
     const handleCreateTitle: SubmitHandler<CreateTitleData> = async (data) => {
         try {
+            setIsExpenseIncomesModalOpen(false);
+
             reset({
                 description: "",
                 notes: "",

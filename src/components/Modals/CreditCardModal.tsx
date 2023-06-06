@@ -1,30 +1,32 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Input } from "../Forms/Input";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { InputBRL } from "../Forms/InputFormat";
 import { MdClose, MdDescription } from "react-icons/md";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import api from "@/services/api";
 import { toast } from "react-toastify";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FaCalendar, FaMoneyBillWave } from "react-icons/fa";
 import { CreditCardModalContext } from "@/contexts/CreditCardModalContext";
 import { BanksDropdown } from "../Buttons/BanksDropdown";
 import { useBanks } from "@/hooks/useBanks";
 import { FlagsDropdown } from "../Buttons/FlagsDropdown";
 import { useFlags } from "@/hooks/useFlags";
-import { extractNumberFromString } from "@/utils/extractNumberFromString";
 import "react-toastify/dist/ReactToastify.css";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { useEscapeKey } from "@/utils/handleEscapeKey";
+import CreditCardCrud from "@/services/CreditCardCrud";
+import { ConfirmActionModalContext } from "@/contexts/ConfirmActionModalContext";
 
 interface CreateCreditCardData {
+    id?: number;
     name: string;
     creditLimit: string;
     flag: string;
     bank: string;
     closingDay: number | string;
     dueDay: number | string;
+    actionType: string | null;
 }
 
 type CreditCard = {
@@ -37,6 +39,7 @@ type CreditCard = {
     flag: string;
     bank: string;
     inative_at: Date | null;
+    actionType: string | null;
 };
 
 interface CreditCardModalProps {
@@ -49,13 +52,20 @@ export function CreditCardModal({
     setCreditCardBeingEdited,
 }: CreditCardModalProps) {
     const { isCreditCardModalOpen, setIsCreditCardModalOpen } = useContext(CreditCardModalContext);
+    const { createCreditCard } = CreditCardCrud();
+    const { setIsConfirmActionModalOpen, setConfirmModalActionType } =
+        useContext(ConfirmActionModalContext);
     const [isBankDropdownOpen, setIsBankDropdownOpen] = useState<boolean>(false);
     const [isFlagDropdownOpen, setIsFlagDropdownOpen] = useState<boolean>(false);
     const [bank, setBank] = useState<string>("");
     const [flag, setFlag] = useState<string>("");
     const { data: banks } = useBanks();
     const { data: flags } = useFlags();
-    const queryClient = useQueryClient();
+
+    const actionTypeForConfirmModal = {
+        update: "update",
+        delete: "delete",
+    };
 
     function handleCloseModal() {
         reset({});
@@ -63,29 +73,14 @@ export function CreditCardModal({
         setIsCreditCardModalOpen(false);
     }
 
-    const KEY_NAME_ESC = "Escape";
-    const KEY_EVENT_TYPE = "keyup";
-
-    function useEscapeKey(handleCloseModal: () => void) {
-        const handleEscKey = useCallback(
-            (event: any) => {
-                if (event.key === KEY_NAME_ESC) {
-                    handleCloseModal();
-                }
-            },
-            [handleCloseModal]
-        );
-
-        useEffect(() => {
-            document.addEventListener(KEY_EVENT_TYPE, handleEscKey, false);
-
-            return () => {
-                document.removeEventListener(KEY_EVENT_TYPE, handleEscKey, false);
-            };
-        }, [handleEscKey]);
+    function handleDeleteCreditCard() {
+        creditCardBeingEdited!.actionType = actionTypeForConfirmModal.delete;
+        setConfirmModalActionType(creditCardBeingEdited);
+        setIsConfirmActionModalOpen(true);
+        reset({});
+        setCreditCardBeingEdited(null);
+        setIsCreditCardModalOpen(false);
     }
-
-    useEscapeKey(handleCloseModal);
 
     const loginFormSchema = yup.object().shape({
         name: yup
@@ -129,73 +124,23 @@ export function CreditCardModal({
         },
     });
 
-    const createCreditCard = useMutation(
-        async (data: CreateCreditCardData) => {
-            const response = await api.post("/creditcard", {
-                name: data?.name,
-                creditLimit: extractNumberFromString(data?.creditLimit),
-                flag: flag,
-                bank: bank,
-                closingDay: data?.closingDay,
-                dueDay: data?.dueDay,
-            });
-
-            return response.data;
-        },
-        {
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(["creditCards"]);
-                handleCloseModal();
-                toast.success("Cartão cadastrado com sucesso");
-            },
-        }
-    );
-
-    const editCreditCard = useMutation(
-        async (data: CreateCreditCardData) => {
-            const response = await api.put(`/creditcard/${creditCardBeingEdited?.id}`, {
-                name: data?.name,
-                creditLimit: extractNumberFromString(data?.creditLimit),
-                flag: flag,
-                bank: bank,
-                closingDay: data?.closingDay,
-                dueDay: data?.dueDay,
-            });
-
-            return response.data;
-        },
-        {
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(["creditCards"]);
-                handleCloseModal();
-                toast.success("Cartão editado com sucesso");
-            },
-        }
-    );
-
-    const deleteCreditCard = useMutation(
-        async () => {
-            const response = await api.delete(`/creditcard/${creditCardBeingEdited?.id}`);
-
-            return response.data;
-        },
-        {
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(["creditCards"]);
-                handleCloseModal();
-                toast.success("Cartão deletado com sucesso");
-            },
-        }
-    );
-
     const handleCreateCreditCard: SubmitHandler<CreateCreditCardData> = async (data) => {
         try {
+            handleCloseModal();
+
             if (bank === "" || flag === "") {
                 throw new Error("Erro: É necessário escolher um banco e uma bandeira.");
             }
 
+            data.bank = bank;
+            data.flag = flag;
+
             if (creditCardBeingEdited) {
-                await editCreditCard.mutateAsync(data);
+                data.id = creditCardBeingEdited?.id;
+                data.actionType = actionTypeForConfirmModal.update;
+
+                setConfirmModalActionType(data);
+                setIsConfirmActionModalOpen(true);
             } else {
                 await createCreditCard.mutateAsync(data);
             }
@@ -209,7 +154,6 @@ export function CreditCardModal({
                 dueDay: "",
             });
         } catch (error: any) {
-            handleCloseModal();
             if (error?.response?.data?.message) {
                 toast.error(error?.response?.data?.message);
             } else if (error?.message) {
@@ -224,6 +168,8 @@ export function CreditCardModal({
         setBank(creditCardBeingEdited?.bank!);
         setFlag(creditCardBeingEdited?.flag!);
     }, [creditCardBeingEdited]);
+
+    useEscapeKey(handleCloseModal);
 
     return (
         <>
@@ -331,7 +277,7 @@ export function CreditCardModal({
                                                     focus:outline-none active:bg-red-700"
                                                 disabled={isSubmitting}
                                                 type="button"
-                                                onClick={() => deleteCreditCard.mutate()}
+                                                onClick={() => handleDeleteCreditCard()}
                                             >
                                                 Deletar
                                             </button>

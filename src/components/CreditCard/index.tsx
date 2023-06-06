@@ -32,6 +32,7 @@ export function CreditCard({ name, creditCard, onClick }: CreditCardProps) {
         "WILL_BANK",
         "BANCO_INTER",
         "BANCO_ORIGINAL",
+        "ITAU",
     ];
 
     const defaultColor = !bankNames.some((name) => creditCard?.bank === name);
