@@ -1,5 +1,5 @@
 import { ExpenseIncomesModalContext } from "@/contexts/ExpenseIncomesModalContext";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Input } from "../Forms/Input";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { InputBRL } from "../Forms/InputFormat";
@@ -85,7 +85,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                 notes: data?.notes,
                 payDate: data?.isPaidCheckbox ? new Date() : null,
                 installment: creditCardId === 0 ? 1 : data?.installment,
-                creditCardId: title.includes("despesa") ? creditCardId : 0,
+                creditCardId: title.includes("despesa") ? creditCardId : null,
                 value: extractNumberFromString(data?.value),
                 referenceDate: selectedReferenceDate,
                 type: title.includes("despesa") ? "EXPENSE" : "INCOME",
@@ -104,10 +104,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                 await Promise.all([
                     queryClient.invalidateQueries(["cashFlow"]),
                     queryClient.invalidateQueries(["users"]),
-                    queryClient.invalidateQueries(["lastDaysIncomes"]),
-                    queryClient.invalidateQueries(["lastDaysExpenses"]),
-                    queryClient.invalidateQueries(["lastDaysPieExpenses"]),
-                    queryClient.invalidateQueries(["lastDaysPieIncomes"]),
+                    queryClient.invalidateQueries(["lastXDays"]),                    queryClient.invalidateQueries(["lastDaysPie"]),
                     queryClient.invalidateQueries(["creditCards"]),
                 ]);
             },
@@ -124,6 +121,10 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                 installment: 1,
             });
 
+            if (selectedReferenceDate.getHours() > 20) {
+                setSelectedReferenceDate(new Date(selectedReferenceDate.setHours(selectedReferenceDate.getHours() - 3)));
+            }
+            
             await createTitle.mutateAsync(data);
 
             setCreditCardId(0);

@@ -1,6 +1,4 @@
-import { CreditCardModalContext } from "@/contexts/CreditCardModalContext";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { useContext } from "react";
 import { RiMastercardFill, RiVisaFill } from "react-icons/ri";
 
 type CreditCardProp = {
