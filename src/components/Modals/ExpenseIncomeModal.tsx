@@ -85,7 +85,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                 notes: data?.notes,
                 payDate: data?.isPaidCheckbox ? new Date() : null,
                 installment: creditCardId === 0 ? 1 : data?.installment,
-                creditCardId: title.includes("despesa") ? creditCardId : null,
+                creditCardId: creditCardId !== 0 && creditCardId !== -1 ? creditCardId : null,
                 value: extractNumberFromString(data?.value),
                 referenceDate: selectedReferenceDate,
                 type: title.includes("despesa") ? "EXPENSE" : "INCOME",
@@ -104,7 +104,9 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                 await Promise.all([
                     queryClient.invalidateQueries(["cashFlow"]),
                     queryClient.invalidateQueries(["users"]),
-                    queryClient.invalidateQueries(["lastXDays"]),                    queryClient.invalidateQueries(["lastDaysPie"]),
+                    queryClient.invalidateQueries(["lastXDays"]),
+                    queryClient.invalidateQueries(["lastDaysPie"]),
+                    queryClient.invalidateQueries(["Titles"]),
                     queryClient.invalidateQueries(["creditCards"]),
                 ]);
             },
@@ -113,7 +115,23 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
 
     const handleCreateTitle: SubmitHandler<CreateTitleData> = async (data) => {
         try {
+            if (costCenterId === 0) {
+                throw new Error("Você precisa escolher um centro de custo");
+            }
+
+            if (title.includes("despesa") && creditCardId === 0) {
+                throw new Error("Você precisa escolher a forma de pagamento");
+            }
+
             setIsExpenseIncomesModalOpen(false);
+
+            if (selectedReferenceDate.getHours() > 20) {
+                setSelectedReferenceDate(
+                    new Date(selectedReferenceDate.setHours(selectedReferenceDate.getHours() - 3))
+                );
+            }
+
+            await createTitle.mutateAsync(data);
 
             reset({
                 description: "",
@@ -121,17 +139,18 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                 installment: 1,
             });
 
-            if (selectedReferenceDate.getHours() > 20) {
-                setSelectedReferenceDate(new Date(selectedReferenceDate.setHours(selectedReferenceDate.getHours() - 3)));
-            }
-            
-            await createTitle.mutateAsync(data);
-
             setCreditCardId(0);
             setCostCenterId(0);
             setSelectedReferenceDate(new Date());
         } catch (error: any) {
-            setIsExpenseIncomesModalOpen(false);
+            if (error.message === "Você precisa escolher um centro de custo") {
+                return toast.error(error.message);
+            } else if (error.message === "Você precisa escolher a forma de pagamento") {
+                return toast.error(error.message);
+            } else {
+                setIsExpenseIncomesModalOpen(false);
+            }
+
             if (error?.response?.data?.message) {
                 toast.error(error?.response?.data?.message);
             } else {
@@ -196,7 +215,7 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                                         {title.includes("despesa") && (
                                             <div
                                                 className={`flex items-center justify-end gap-2 ${
-                                                    creditCardId === 0 ? "opacity-50" : ""
+                                                    creditCardId === -1 ? "opacity-50" : ""
                                                 }`}
                                             >
                                                 <label htmlFor="installment">
@@ -210,11 +229,11 @@ export function ExpenseIncomeModal({ title }: ExpenseIncomeModalProps) {
                                                     error={errors?.installment}
                                                     maxLength={2}
                                                     tailwindCss={`w-[79px] ${
-                                                        creditCardId === 0 ? "opacity-50" : ""
+                                                        creditCardId === -1 ? "opacity-50" : ""
                                                     }`}
                                                     name="installment"
                                                     type="number"
-                                                    disabled={creditCardId === 0}
+                                                    disabled={creditCardId === -1}
                                                     max={99}
                                                 />
                                             </div>

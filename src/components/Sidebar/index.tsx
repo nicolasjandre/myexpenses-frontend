@@ -69,8 +69,6 @@ export default function Header() {
           <ActiveLink linkHref="/creditcards" Icon={MdCreditCard} title="Cartões" />
 
           <ActiveLink linkHref="/transactions" Icon={MdMonetizationOn} title="Transações" />
-          
-          <ActiveLink linkHref="/settings" Icon={MdSettings} title="Configurações" />
 
           <ActiveLink linkHref="/" onClickFunc={signOut} Icon={MdLogout} title="Sair" />
 

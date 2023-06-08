@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { GlobalLoader } from "@/components/Loaders/GlobalLoader";
 import { CreditCardModalProvider } from "@/contexts/CreditCardModalContext";
 import { ConfirmActionModalProvider } from "@/contexts/ConfirmActionModalContext";
+import { PageProvider } from "@/contexts/PageContext";
 
 export default function App({ Component, pageProps }: AppProps) {
     const [load, setLoad] = useState({
@@ -75,20 +76,22 @@ export default function App({ Component, pageProps }: AppProps) {
                         <Last7OrLast30DaysChartProvider>
                             <ChoosenMonthProvider>
                                 <CreditCardModalProvider>
-                                    <ConfirmActionModalProvider>
-                                        <UserBalanceModalProvider>
-                                            <AuthProvider>
-                                                <ExpenseIncomesModalProvider>
-                                                    <SidebarProvider>
-                                                        <DropdownButtonProvider>
-                                                            <Component {...pageProps} />
-                                                        </DropdownButtonProvider>
-                                                    </SidebarProvider>
-                                                </ExpenseIncomesModalProvider>
-                                            </AuthProvider>
-                                            <ReactQueryDevtools initialIsOpen={false} />
-                                        </UserBalanceModalProvider>
-                                    </ConfirmActionModalProvider>
+                                    <PageProvider>
+                                        <ConfirmActionModalProvider>
+                                            <UserBalanceModalProvider>
+                                                <AuthProvider>
+                                                    <ExpenseIncomesModalProvider>
+                                                        <SidebarProvider>
+                                                            <DropdownButtonProvider>
+                                                                <Component {...pageProps} />
+                                                            </DropdownButtonProvider>
+                                                        </SidebarProvider>
+                                                    </ExpenseIncomesModalProvider>
+                                                </AuthProvider>
+                                                <ReactQueryDevtools initialIsOpen={false} />
+                                            </UserBalanceModalProvider>
+                                        </ConfirmActionModalProvider>
+                                    </PageProvider>
                                 </CreditCardModalProvider>
                             </ChoosenMonthProvider>
                         </Last7OrLast30DaysChartProvider>

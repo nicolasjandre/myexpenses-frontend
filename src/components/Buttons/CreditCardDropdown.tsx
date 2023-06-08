@@ -83,7 +83,7 @@ export function CreditCardDropdown({
         >
           <div className="py-1" role="none">
             <a
-              onClick={() => handleCreditCardName(0, "Carteira")}
+              onClick={() => handleCreditCardName(-1, "Carteira")}
               href="#"
               className="text-md flex items-center gap-2 px-4 py-2 transition-colors ease-in hover:bg-gray-600
                    dark:text-white"
